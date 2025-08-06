@@ -1,18 +1,2562 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Teste do SACE</title>
-  <link rel="stylesheet" href="style.css">
+  <head>
+  <meta charset="UTF-8" />
+  <title>Painel de Coleta</title>
+  <style>
+    body {
+  margin: 0;
+  font-family: 'Poppins', 'Arial', sans-serif; /* Fonte mais moderna */
+  background: linear-gradient(135deg, #c0e0e7, #ffffff); /* Gradiente mais "diagonal" */
+  min-height: 100vh;
+  display: flex;
+  overflow-x: hidden;
+}
+    .login-container, .main-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .login-box {
+      background: #fff;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .login-box input {
+      width: 90%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+    }
+    .login-box button {
+      background-color: #6EC1E4;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      width: 100%;
+    }
+    .sidebar {
+      width: 220px;
+      background: linear-gradient(180deg, #a7c7e7, #e0f7fa);
+      padding-top: 20px;
+      height: 100vh;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    }
+
+    .sidebar h2 {
+  text-align: center;
+  color: #064273;
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 40px;
+}
+
+    .sidebar button {
+      width: 180px;
+      margin: 10px auto;
+      display: block;
+      padding: 12px;
+      border: none;
+      background-color: #064273;
+      color: white;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0px 4px 6px rgba(0,0,0,0.1);
+      transition: 0.3s;
+    }
+
+    .sidebar button:hover {
+      background-color: #046bac;
+    }
+
+    .main {
+      flex: 1;
+      padding: 30px;
+    }
+
+    .card {
+      display: none;
+      background-color: white;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      animation: fadeIn 0.5s;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button.enviar {
+      margin-top: 20px;
+      padding: 12px;
+      background-color: #064273;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 150px;
+      box-shadow: 0px 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .success, .error {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    .success { color: green; }
+    .error { color: red; }
+
+    #formAdmissao {
+    max-width: 900px;
+    margin: auto;
+    font-family: 'Poppins', sans-serif;
+    background: #f9f9f9;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.08);
+  }
+
+  #formAdmissao label {
+    display: block;
+    margin-top: 15px;
+    font-weight: bold;
+    color: #333;
+  }
+
+  #formAdmissao input,
+  #formAdmissao select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+  }
+
+  #formAdmissao fieldset {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 20px;
+    background-color: #fff;
+  }
+
+  #formAdmissao legend {
+    font-size: 16px;
+    font-weight: bold;
+    color: #2a5d8f;
+  }
+
+  #dadosPacienteAdmissao {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #eef6fb;
+    border-radius: 8px;
+  }
+
+  input[disabled] {
+    background-color: #e9ecef;
+    color: #495057;
+    font-weight: 500;
+  }
+
+  .botoes-pacientes h3 {
+    margin-top: 20px;
+    font-size: 1rem;
+    color: #333;
+  }
+
+  .grupo-botoes {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .grupo-botoes button {
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+
+  .grupo-botoes button:hover {
+    background-color: #e0e0e0;
+  }
+
+.card {
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+</style>
 </head>
+
 <body>
-  <h1>Olá, Gabriela!</h1>
-  <p>Seu app está funcionando! 🎉</p>
 
-  <button onclick="mostrarMensagem()">Clique aqui</button>
+<!-- Tela de Login -->
+<div class="login-container" id="loginScreen">
+  <div class="login-box">
+    <!-- Ícone -->
+    <img src="https://img.icons8.com/ios-filled/100/064273/hospital-room.png" alt="GestCare Logo" style="margin-bottom: 15px;">
+    
+    <!-- Título -->
+    <h2 style="color: #064273;">SACE - Sistema de Apoio ao Cuidado de Enfermagem</h2>
+    <p style="font-weight: bold; margin-bottom: 10px;">Ferramenta de apoio ao Processo de Enfermagem, de Gestão da Assistência Domiciliar em Saúde para Homecare e Instituições de Longa Permanência para Idosos</p>
+    
+    <!-- Descrição -->
+    <p style="font-size: 14px; margin-bottom: 20px; color: #555;">Solução integrada para gestão assistencial, registro clínico qualificado e acompanhamento seguro no cuidado domiciliar e institucional.</p>
+    
+    <!-- Login -->
+    <h3>Faça seu login</h3>
+    <input type="text" id="matricula" placeholder="Digite sua matrícula" style="margin-top: 10px;">
+    <button onclick="validarMatricula()">Entrar</button>
+    
+    <p id="errorMessage" style="color:red; display:none; margin-top: 10px;">Matrícula inválida! Verifique e tente novamente.</p>
+    
+    <hr style="margin: 20px 0; border-color: #ccc;">
+    
+    <!-- Rodapé -->
+    <div style="font-size: 12px; color: #777; margin-top: 10px;">
+      Desenvolvido por <strong>Enfermeira Gabriela de Alencar Veiga Galdino</strong><br>
+      COREN RJ 608996<br>
+      Produto do Mestrado em Telessaúde e Saúde Digital<br>
+      Universidade do Estado do Rio de Janeiro (UERJ) – 2024/2026
+    </div>
+  </div>
+</div>
 
-  <script src="script.js"></script>
+<!-- Tela Principal + Menu -->
+<div class="main-container" id="mainScreen" style="display:none;">
+  
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+    <h2 style="color:#064273; text-align:center;">Menu</h2>
+    <!-- Botões dinâmicos -->
+</div>
+
+<!-- Tela de Boas vindas -->
+<div class="card" id="bemvindoCard">
+
+  <h1 style="color:#064273;">Bem-vindo ao <strong>SACE – Sistema de Apoio ao Cuidado em Enfermagem</strong></h1>
+
+  <p style="font-weight: bold; margin-bottom: 10px;">– Plataforma para Consultório de Enfermagem, Home Care e ILPIs</p>
+
+  <p style="font-size: 16px; color:#555; max-width:800px; line-height:1.6;">
+    O <strong>SACE</strong> é uma ferramenta desenvolvida <strong>de Enfermeira para Enfermeiros</strong>, alinhada às diretrizes do 
+    <strong>Processo de Enfermagem</strong> e às normativas do <strong>Conselho Federal de Enfermagem (Cofen)</strong> e dos 
+    <strong>Conselhos Regionais (Coren)</strong>. Seu objetivo é apoiar o registro clínico e a gestão assistencial nos contextos de 
+    <strong>atenção domiciliar, consultórios de enfermagem e instituições de longa permanência para idosos</strong>.
+  </p>
+
+  <p style="font-size: 16px; color:#555; max-width:800px; line-height:1.6;">
+    Esta plataforma opera exclusivamente como uma <strong>interface de entrada de dados</strong>. Todos os registros são realizados de forma segura, 
+    individualizada e <strong>sem qualquer compartilhamento externo de informações</strong>. Não há retirada, exportação nem visualização de dados por terceiros, 
+    garantindo a <strong>confidencialidade, integridade e o cumprimento ético da profissão</strong>.
+  </p>
+
+  <p style="font-size: 16px; color:#555; max-width:800px; line-height:1.6;">
+    O acesso é restrito e protegido por senha. Ao utilizar esta ferramenta, o profissional assume <strong>responsabilidade ética e legal sobre os dados inseridos</strong>, 
+    conforme previsto nos códigos de conduta e sigilo profissional da Enfermagem.
+  </p>
+
+  <p style="font-size: 16px; color:#555; max-width:800px; line-height:1.6;">
+    O <strong>SACE</strong> proporciona um ambiente seguro e eficiente para o registro, acompanhamento e gestão do cuidado em <strong>atenção domiciliar</strong> e 
+    <strong>instituições de longa permanência</strong>, promovendo qualidade, rastreabilidade e suporte à tomada de decisão.
+  </p>
+
+  <div style="margin-top: 30px; background: #e0f7fa; padding: 20px; border-radius: 12px; max-width:850px; box-shadow: 0 4px 8px rgba(0,0,0,0.05);">
+    <h3 style="color:#064273;">📋 Orientações</h3>
+    <ul style="list-style: none; padding-left: 0; color:#333; font-size:15px;">
+      <li>✔️ Use o menu lateral para acessar os formulários e funcionalidades.</li>
+      <li>✔️ Registre admissões, consultas, evoluções e intercorrências com segurança.</li>
+      <li>✔️ Todos os registros seguem padrões éticos, técnicos e assistenciais atualizados.</li>
+    </ul>
+    <p style="margin-top:15px; font-size:14px; color:#666;">Dúvidas ou sugestões? Entre em contato com a responsável técnica pelo sistema. E-mail: enfaveigagaldino@gmail.com</p>
+  </div>
+</div>
+
+<!-- Card de Orientações gerais para a RT -->
+<div class="card" id="orientacaoCard" style="max-width: 900px; margin: 0 auto; padding: 25px;">
+  <h2 style="color: #064273; margin-bottom: 20px;">Sistema de Gestão Clínica em Enfermagem – <strong>SACE</strong></h2>
+  
+  <p style="font-size: 16px; line-height: 1.8; color: #444;">
+    O <strong>SACE – Sistema de Apoio ao Cuidado em Enfermagem</strong> foi desenvolvido pela <strong>Enfermeira Gabriela de Alencar Veiga Galdino</strong> (COREN-RJ 608996), como produto do <strong>Mestrado em Telessaúde e Saúde Digital</strong> da <strong>Universidade do Estado do Rio de Janeiro (UERJ)</strong>, sob orientação da Professora <strong>Helena Maria Scherlowski Leal David</strong>.
+  </p>
+
+  <p style="font-size: 16px; line-height: 1.8; color: #444;">
+    Esta plataforma foi cuidadosamente concebida para fortalecer a atuação da <strong>Enfermagem</strong> – tanto de nível superior quanto técnico – nos contextos da <strong>Atenção Domiciliar</strong> e das <strong>Instituições de Longa Permanência para Idosos (ILPIs)</strong>.
+  </p>
+
+  <div style="background-color: #f0f8ff; padding: 20px; border-radius: 12px; margin: 20px 0;">
+    <h4 style="color: #064273;">✨ Benefícios do SACE:</h4>
+    <ul style="list-style: none; padding-left: 0; color: #333; font-size: 15px; line-height: 1.8;">
+      <li>✔️ Interface intuitiva e de fácil navegação;</li>
+      <li>✔️ Instrumentos assistenciais e gerenciais alinhados às normativas profissionais vigentes;</li>
+      <li>✔️ Segurança e eficiência no registro das condutas de enfermagem;</li>
+      <li>✔️ Integração com práticas de Telenfermagem e gestão remota do cuidado;</li>
+      <li>✔️ Suporte à Sistematização do Processo de Enfermagem e às atribuições legais da profissão.</li>
+    </ul>
+  </div>
+
+  <p style="font-size: 16px; line-height: 1.8; color: #444;">
+    Todos os instrumentos disponíveis no sistema seguem validações e recomendações do <strong>Ministério da Saúde</strong>, dos <strong>Conselhos Regionais de Enfermagem (Coren)</strong> e do <strong>Conselho Federal de Enfermagem (Cofen)</strong>, assegurando <strong>padronização</strong>, <strong>confiabilidade</strong> e <strong>segurança</strong> na prática assistencial.
+  </p>
+
+  <p style="font-size: 14px; margin-top: 25px; color: #777;">
+    Dúvidas ou sugestões? Entre em contato com a responsável técnica pelo sistema, e-mail: enfaveigagaldino@gmail.com </p>
+</div>
+
+<!-- Card de Cadastro de novo Cliente - NÃO ALTERAR MAIS -->
+<div id="cardCadastro" class="card" style="display:none;">
+  <h2 style="color: #064273; margin-bottom: 20px;">Sistema de Gestão Clínica em Enfermagem – <strong>SACE</strong></h2>
+  <h2>Cadastro Administrativo de Novos Clientes</h2>
+
+  <form id="formCadastro" onsubmit="event.preventDefault(); enviarCadastro();">
+  
+  <!-- SEÇÃO 1: DADOS PESSOAIS -->
+  <h3> 🧍 Dados Pessoais</h3>
+
+    <label>Nome completo do paciente:</label>
+    <input type="text" name="nomePaciente" required>
+
+    <label>Número do prontuário (gerado automaticamente):</label>
+    <div style="display: flex; gap: 10px; align-items: center;">
+      <input type="text" name="nomeId" id="nomeId" readonly style="flex: 1;">
+      <button type="button" onclick="gerarIdentificador()">Gerar Identificador</button>
+    </div>
+
+    <label>Data de nascimento:</label>
+    <input type="date" name="dataNascimento" required>
+
+    <label>CPF:</label>
+    <input type="text" name="cpf">
+
+    <label>CNS (Cartão Nacional de Saúde):</label>
+    <input type="text" name="cns">
+
+    <label>Nome da mãe:</label>
+    <input type="text" name="nomeMae">
+
+    <label>Sexo:</label>
+    <select name="sexo" required>
+      <option value="" disabled selected>Selecione...</option>
+      <option value="Feminino">Feminino</option>
+      <option value="Masculino">Masculino</option>
+      <option value="Outro">Outro</option>
+    </select>
+
+    <!-- SEÇÃO 2: CONTATO E LOCALIZAÇÃO -->
+    <h3>📍 Contato e Localização</h3>
+
+    <label>Tipo de residência:</label>
+    <select name="tipoResidencia" required>
+      <option value="" disabled selected>Selecione...</option>
+      <option value="Domicílio">Domicílio</option>
+      <option value="ILPI">ILPI (Instituição de Longa Permanência)</option>
+    </select>
+
+    <label>Endereço completo:</label>
+    <input type="text" name="endereco">
+
+    <label>Telefone / WhatsApp:</label>
+    <input type="text" name="telefone">
+
+    <!-- SEÇÃO 3: CUIDADOR / RESPONSÁVEL -->
+    <h3>👥 Responsável pelo Paciente</h3>
+
+    <label>Nome do responsável legal/cuidador:</label>
+    <input type="text" name="responsavelLegal">
+
+    <label>Necessita de cuidados 24h?</label>
+    <select name="cuidados24h">
+      <option value="" disabled selected>Selecione...</option>
+      <option value="Sim">Sim</option>
+      <option value="Não">Não</option>
+    </select>
+
+    <!-- SEÇÃO 4: PLANO DE SAÚDE -->
+    <h3>🏥 Plano de Saúde</h3>
+
+    <label>Plano de Saúde / Convênio:</label>
+    <input type="text" name="planoSaude">
+
+    <label>Número da carteirinha:</label>
+    <input type="text" name="carteirinha">
+
+    <label>Validade do plano:</label>
+    <input type="date" name="validadePlano">
+
+     <!-- SEÇÃO 5: CLASSIFICAÇÃO DO ATENDIMENTO -->
+    <h3>📄 Classificação do Atendimento</h3>
+
+    <label>Tipo de atendimento:</label>
+    <select name="tipoAtendimento" id="tipoAtendimento" required>
+  <option value="" disabled selected>Selecione...</option>
+  <option>AD1 - Atenção domiciliar de baixa complexidade</option>
+  <option>AD2 - Atenção domiciliar de média complexidade</option>
+  <option>AD3 - Atenção domiciliar de alta complexidade</option>
+</select>
+
+  <label>Categoria do paciente:</label>
+  <select name="categoriaPaciente" id="categoriaPaciente" required>
+  <option value="" disabled selected>Selecione...</option>
+  <option value="Curativo Complexo">Curativo Complexo</option>
+  <option value="Paciente Terminal">Paciente Terminal</option>
+  <option value="Reabilitação">Reabilitação</option>
+  <option value="Alta Complexidade Pediátrica">Alta Complexidade Pediátrica</option>
+  <option value="Paciente com Demência Avançada">Paciente com Demência Avançada</option>
+  <option value="Acompanhamento de Condição Crônica Complexa">Acompanhamento de Condição Crônica Complexa</option>
+  <option value="Outro">Outro</option>
+</select>
+
+  <!-- SEÇÃO 6: EQUIPE RESPONSÁVEL -->
+    <h3>🧑‍⚕️ Equipe de Enfermagem</h3>
+
+    <!-- Lista suspensa para escolher a equipe -->
+    <label><strong>Equipe de Enfermagem responsável pelo cuidado:</strong></label>
+    <select id="selectEquipe" name="equipeResponsavel" onchange="atualizarEquipe()" required>
+      <option value="">Selecione a equipe</option>
+      <option value="Equipe Florence">Equipe Florence</option>
+      <option value="Equipe Horta">Equipe Horta</option>
+      <option value="Equipe Nery">Equipe Nery</option>
+      <option value="Equipe Peplau">Equipe Peplau</option>
+    </select>
+
+<!-- Confirmação visual (opcional) -->
+<p id="equipeSelecionadaTexto" style="margin-top: 8px; font-weight: bold; color: darkblue;"></p>
+    <!-- Seleção do enfermeiro responsável -->
+    <label><strong>Enfermeiro Responsável:</strong></label>
+    <select name="enfermeiroResponsavel" id="enfermeiroResponsavel" required>
+      <option value="">Selecione a equipe primeiro...</option>
+    </select>
+
+    <!-- Seleção múltipla dos técnicos -->
+    <label><strong>Técnicos de Enfermagem:</strong></label>
+    <select name="tecnicosResponsaveis" id="tecnicosResponsaveis" multiple required>
+      <option value="">Selecione a equipe primeiro...</option>
+    </select>
+
+ <!-- SEÇÃO 7: OBSERVAÇÕES FINAIS -->
+    <h3>📝 Observações</h3>
+
+
+  <label>Observações administrativas:</label>
+  <textarea name="observacoes" rows="3" placeholder="Informações adicionais relevantes..."></textarea>
+
+    <button type="button" class="enviar" onclick="enviarCadastro()">Enviar</button>
+    <p id="msgCadastro"></p>
+  </form>
+</div>
+
+<!-- CARD ADMISSAO DE ENFERMAGEM - NÃO ALTERAR MAIS -->
+<div class="card" id="admissaoCard">
+<h2>Admissão de Enfermagem para Atenção Domiciliar - Enfermeiro</h2>
+<p> Instrumento adaptado. Referência: Recomendações para Registros de Enfermagem no Exercício da Profissão. Conselho Federal de Enfermagem. 2023.</p>
+   
+  <form id="formAdmissao">
+  <label>Data do registro no sistema Gest-Care:</label>
+  <input type="date" name="data" required>
+
+  <fieldset>
+    <legend>Identificação automática do Paciente</legend>
+
+    <label>Selecione o paciente:</label>
+    <select id="listaPacientes" onchange="preencherCamposAdmissao()" required>
+      <option value="">Selecione...</option>
+    </select>
+
+    <input type="hidden" id="campoNomeIdAdmissao" name="nomeId">
+
+    <div id="dadosPacienteAdmissao" style="display: none;">
+      <input type="hidden" id="campoNomePaciente" name="nomePaciente">
+      <input type="hidden" id="campoNascimento" name="dataNascimento">
+      <input type="hidden" id="campoSexo" name="sexo">
+      <input type="hidden" id="campoEquipe" name="equipe">
+      <input type="hidden" id="campoStatus" name="status">
+
+      <label>Prontuário:</label>
+      <input type="text" id="exibeNomeId" disabled>
+
+      <label>Data de Nascimento:</label>
+      <input type="text" id="exibeDataNascimento" disabled>
+
+      <label>Sexo:</label>
+      <input type="text" id="exibeSexo" disabled>
+
+      <label>Equipe:</label>
+      <input type="text" id="exibeEquipe" disabled>
+
+    </div>
+  </fieldset>
+
+      <fieldset>
+      <label>Data e hora da Admissão Clínica:</label>
+      <input type="datetime-local" name="dataHora" required>
+      </fieldset>
+
+      <fieldset>
+        <label>Status do Atendimento:</label>
+        <select name="statusAtendimento" required>
+        <option value="" disabled selected>Selecione...</option>
+        <option value="Em atendimento">Em atendimento</option>
+        <option value="Alta">Alta</option>
+        <option value="Óbito">Óbito</option>
+        </select>
+
+       <label>Procedência do paciente:</label>
+        <select name="procedencia" required>
+        <option value="" disabled selected>Selecione...</option>
+        <option value="Domicílio">Domicílio</option>
+        <option value="Hospital">Hospital</option>
+        <option value="ILPI">ILPI (Instituição de Longa Permanência)</option>
+        </select>
+      
+        <label>Condições de chegada:</label>
+        <select name="condicoesChegada" required>
+        <option value="" disabled selected>Selecione...</option>
+        <option value="Estável">Estável</option>
+        <option value="Estável com suporte">Estável com suporte</option>
+        <option value="Frágil">Frágil</option>
+        <option value="Grave">Grave</option>
+        </select>
+
+        <label>Nível de consciência:</label>
+        <select name="nivelConsciencia" required>
+        <option value="" disabled selected>Selecione...</option>
+        <option value="Consciente">Consciente</option>
+        <option value="Desorientado">Desorientado</option>
+        <option value="Rebaixado">Rebaixado</option>
+        </select>
+
+        <label>Presença de acompanhante ou responsável:</label>
+        <input type="text" name="acompanhante">
+
+        <label>Condições de higiene:</label>
+        <select name="higiene" required>
+        <option value="" disabled selected>Selecione...</option>
+        <option value="Prejudicada">Prejudicada</option>
+        <option value="Preservada">Preservada</option>
+        <option value="Parcial - Necessita auxílio para banho e higiene íntima">Parcial -  Necessita auxílio para banho e higiene íntima</option>
+        </select>
+
+        <label>Presença de lesões prévias e localização:</label>
+        <textarea name="lesoes"></textarea>
+
+        <label>Deficiências (se houver):</label>
+        <select name="deficiencias" required>
+        <option value="" disabled selected>Selecione...</option>
+        <option value="Cognitiva">Cognitiva</option>
+        <option value="Motora">Motora</option>
+        <option value="Sensorial">Sensorial</option>
+        <option value="Não">Não</option>
+        </select>
+
+        <label>Uso de próteses ou órteses:</label>
+        <textarea name="protese"></textarea>
+
+        <label>Queixas relacionadas ao motivo da internação:</label>
+        <textarea name="queixas"></textarea>
+
+        <label>Procedimentos/cuidados realizados:</label>
+        <textarea name="procedimentos"></textarea>
+
+       <label>Orientações prestadas:</label>
+       <p>
+       <input type="checkbox" name="orientacoesPadrao" checked required>
+       Confirmo que o paciente foi orientado quanto ao plano de cuidado, mudança de decúbito e hidratação.
+       </p>
+      </fieldset>
+
+  <fieldset>
+  <legend><h4>Escala de Braden - Avaliação do Risco de Lesão por Pressão</h4></legend>
+
+  <label>Percepção sensorial:</label>
+  <select name="percepcaoSensorial" required>
+    <option value="" disabled selected>Selecione...</option>
+    <option value="1">1 - Completamente limitado</option>
+    <option value="2">2 - Muito limitado</option>
+    <option value="3">3 - Ligeiramente limitado</option>
+    <option value="4">4 - Nenhuma limitação</option>
+  </select>
+
+  <label>Exposição à umidade:</label>
+  <select name="umidade" required>
+    <option value="" disabled selected>Selecione...</option>
+    <option value="1">1 - Constantemente úmido</option>
+    <option value="2">2 - Muito úmido</option>
+    <option value="3">3 - Ocasionalmente úmido</option>
+    <option value="4">4 - Raramente úmido</option>
+  </select>
+
+  <label>Atividade:</label>
+  <select name="atividade" required>
+    <option value="" disabled selected>Selecione...</option>
+    <option value="1">1 - Acamado</option>
+    <option value="2">2 - Confinado à cadeira</option>
+    <option value="3">3 - Anda ocasionalmente</option>
+    <option value="4">4 - Anda frequentemente</option>
+  </select>
+
+  <label>Mobilidade:</label>
+  <select name="mobilidade" required>
+    <option value="" disabled selected>Selecione...</option>
+    <option value="1">1 - Completamente imóvel</option>
+    <option value="2">2 - Muito limitado</option>
+    <option value="3">3 - Ligeiramente limitado</option>
+    <option value="4">4 - Totalmente móvel</option>
+  </select>
+
+  <label>Nutrição:</label>
+  <select name="nutricao" required>
+    <option value="" disabled selected>Selecione...</option>
+    <option value="1">1 - Muito pobre</option>
+    <option value="2">2 - Provavelmente inadequada</option>
+    <option value="3">3 - Adequada</option>
+    <option value="4">4 - Excelente</option>
+  </select>
+
+  <label>Fricção e cisalhamento:</label>
+  <select name="friccao" required>
+    <option value="" disabled selected>Selecione...</option>
+    <option value="1">1 - Problema presente</option>
+    <option value="2">2 - Problema potencial</option>
+    <option value="3">3 - Nenhum problema aparente</option>
+  </select>
+
+  <label>Pontuação Total (Braden):</label>
+  <input type="number" id="pontuacaoBraden" name="pontuacaoBraden" readonly>
+
+  <p id="interpretacaoBraden"></p>
+  <input type="hidden" id="interpretacaoBradenInput" name="interpretacaoBraden">
+
+  <button type="button" onclick="calcularBraden()">Calcular Braden</button>
+
+</fieldset>
+
+<fieldset>
+  <legend><h4>Escala de Morse - Avaliação do Risco de Queda</h4></legend>
+
+  <label>Histórico de quedas:</label>
+  <select name="historicoQueda" required>
+    <option value="" disabled selected>Selecione...</option>
+    <option value="25">Sim</option>
+    <option value="0">Não</option>
+  </select>
+
+  <label>Diagnóstico secundário:</label>
+  <select name="diagnosticoSecundario" required>
+    <option value="" disabled selected>Selecione...</option>
+    <option value="15">Sim</option>
+    <option value="0">Não</option>
+  </select>
+
+  <label>Auxílio à deambulação:</label>
+  <select name="auxilioDeambulacao" required>
+    <option value="" disabled selected>Selecione...</option>
+    <option value="0">Sem auxílio</option>
+    <option value="15">Bengala/Muletas/Auxílio</option>
+    <option value="30">Uso de mobiliário</option>
+  </select>
+
+  <label>Terapia intravenosa/heparina lock:</label>
+  <select name="terapiaIV" required>
+    <option value="" disabled selected>Selecione...</option>
+    <option value="20">Sim</option>
+    <option value="0">Não</option>
+  </select>
+
+  <label>Marcha:</label>
+  <select name="marcha" required>
+    <option value="" disabled selected>Selecione...</option>
+    <option value="0">Normal</option>
+    <option value="10">Fraca</option>
+    <option value="20">Comprometida</option>
+  </select>
+
+  <label>Estado mental:</label>
+  <select name="estadoMental" required>
+    <option value="" disabled selected>Selecione...</option>
+    <option value="15">Esquece limitações</option>
+    <option value="0">Orientado</option>
+  </select>
+
+  <label>Pontuação Total (Morse):</label>
+  <input type="number" id="pontuacaoMorse" name="pontuacaoMorse" readonly>
+
+  <p id="interpretacaoMorse"></p>
+  <input type="hidden" id="interpretacaoMorseInput" name="interpretacaoMorse">
+
+  <button type="button" onclick="calcularMorse()">Calcular Risco de Queda</button>
+
+
+</fieldset>
+
+        <label>Responsável (Nome e Coren):</label>
+        <input type="text" name="responsavel" required>
+
+        <button type="button" class="enviar" onclick="enviarAdmissao()">Enviar</button>
+      </form>
+      <p id="msgAdmissao"></p>
+</div>
+
+<!-- CARD ANOTAÇÃO DE ENFERMAGEM - TÉCNICO EM ENFERMAGEM - NÃO ALTERAR MAIS -->
+    <div class="card" id="anotacaoCard">
+  <h2>Formulário de Anotação de Enfermagem - Técnico em Enfermagem (Home Care)</h2>
+  
+  <form id="formAnotacao">
+    <label>Data do registro no sistema Gest-Care:</label>
+    <input type="date" name="data" required>
+
+    <label for="selectPaciente">Selecione o paciente:</label>
+    <select id="selectPaciente" required>
+      <option value="">-- Selecione um paciente --</option>
+    </select>
+
+    <div id="dadosPacienteAnotacao" style="display: none; margin-top: 20px;">
+  <!-- Campos ocultos para envio -->
+  <input type="hidden" id="campoNomePacienteAnotacao" name="nomePaciente">
+  <input type="hidden" id="campoNomeIdAnotacao" name="nomeId">
+  <input type="hidden" id="campoNascimentoAnotacao" name="dataNascimento">
+
+  <!-- Exibição visual para confirmação -->
+  <div style="border: 2px solid #cce5ff; background-color: #e6f2ff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+    <h3 style="color: #004085; margin-top: 0; display: flex; align-items: center;">
+      <span style="font-size: 1.5em; margin-right: 10px;">✅</span> Confirmação do Paciente Selecionado
+    </h3>
+<br>
+    <label style="font-weight: bold;">Nome do Paciente:</label>
+    <input type="text" id="exibeNomePaciente" readonly style="width: 100%; padding: 10px; font-size: 1.1em; margin-top: 5px; border: 1px solid #b8daff; border-radius: 5px; background-color: #ffffff;">
+  </div>
+</div>
+
+<br>
+    <fieldset>
+      <label for="ID_CUIDADOR">Nome do Cuidador:</label>
+      <input type="text" id="ID_CUIDADOR" name="ID_CUIDADOR" placeholder="Nome completo do cuidador" required>
+
+      <label for="ID_FAMILIAR">Familiar Responsável:</label>
+      <input type="text" id="ID_FAMILIAR" name="ID_FAMILIAR" placeholder="Nome completo do familiar">
+    </fieldset>
+
+    <fieldset>
+      <legend><h4>Condições do Ambiente e Dispositivos</h4></legend>
+      <label for="COND_AMBIENTE">Condições do Ambiente:</label>
+      <textarea id="COND_AMBIENTE" name="COND_AMBIENTE" rows="3" placeholder="Ex.: Limpo, organizado, iluminação adequada..."></textarea>
+
+      <label for="DISPOSITIVOS">Dispositivos em uso (especificar):</label>
+      <textarea id="DISPOSITIVOS" name="DISPOSITIVOS" rows="3" placeholder="Ex.: Sonda vesical, cateter, GTT..."></textarea>
+    </fieldset>
+
+    <fieldset>
+      <legend><h4>Sinais Vitais</h4></legend>
+      <label for="TAX">Temperatura Corporal (°C):</label>
+      <input type="number" id="TAX" name="TAX" min="34" max="42" step="0.1" placeholder="Ex.: 36.5">
+
+      <label for="PAS">Pressão Arterial Sistólica (mmHg):</label>
+      <input type="number" id="PAS" name="PAS" placeholder="Ex.: 120">
+
+      <label for="PAD">Pressão Arterial Diastólica (mmHg):</label>
+      <input type="number" id="PAD" name="PAD" placeholder="Ex.: 80">
+
+      <label for="PULSO">Frequência Cardíaca (bpm):</label>
+      <input type="number" id="PULSO" name="PULSO" min="40" max="180" placeholder="Ex.: 75">
+
+      <label for="SPO2">Saturação de Oxigênio (SpO2 %):</label>
+      <input type="number" id="SPO2" name="SPO2" min="0" max="100" placeholder="Ex.: 98">
+
+      <label for="CLASSDOR">Grau da Dor:</label>
+      <select id="CLASSDOR" name="CLASSDOR">
+        <option value="" disabled selected>Selecione...</option>
+        <option value="Sem dor">Sem dor</option>
+        <option value="Dor leve">Dor leve</option>
+        <option value="Dor moderada">Dor moderada</option>
+        <option value="Dor intensa">Dor intensa</option>
+      </select>
+    </fieldset>
+
+    <fieldset>
+      <legend><h4>Anotações Clínicas</h4></legend>
+
+      <label for="AVALIACAO_GLOBAL">Avaliação Global do Paciente:</label>
+      <textarea id="AVALIACAO_GLOBAL" name="AVALIACAO_GLOBAL" rows="3" placeholder="Observações gerais sobre estado do paciente..."></textarea>
+
+      <label for="PRESC_MED">Prescrição Médica Cumprida:</label>
+      <textarea id="PRESC_MED" name="PRESC_MED" rows="3" placeholder="Medicações, procedimentos realizados..."></textarea>
+
+      <label for="PRESC_ENF">Prescrição de Enfermagem Cumprida:</label>
+      <textarea id="PRESC_ENF" name="PRESC_ENF" rows="3" placeholder="Cuidados de enfermagem realizados..."></textarea>
+
+      <label for="SEGURANCA_PACIENTE">Medidas de Segurança Adotadas:</label>
+      <textarea id="SEGURANCA_PACIENTE" name="SEGURANCA_PACIENTE" rows="3" placeholder="Ex.: Sinalização, fixação de dispositivos..."></textarea>
+
+      <label for="INTERCORRENCIAS">Intercorrências:</label>
+      <textarea id="INTERCORRENCIAS" name="INTERCORRENCIAS" rows="3" placeholder="Fatos ocorridos e medidas adotadas..."></textarea>
+
+      <label for="CONDUTAS">Condutas Realizadas:</label>
+      <textarea id="CONDUTAS" name="CONDUTAS" rows="3" placeholder="Ações executadas após intercorrências ou observações..."></textarea>
+
+
+    </fieldset>
+
+    <label>Responsável (Nome e Coren):</label>
+    <input type="text" name="RESPONSAVEL" required>
+
+    <button type="button" class="enviar" onclick="enviarAnotacao()">Enviar</button>
+  </form>
+  <p id="msgAnotacao"></p>
+</div>
+
+<!-- CARD CONSULTA DE ENFERMAGEM - NÃO ALTERAR MAIS-->
+<div class="card" id="consultaCard">
+      <h2>Formulário de Consulta para Atenção Domiciliar à Saúde - Enfermagem - presencial/telênfermagem</h2>
+      <p> Instrumento adaptado. Referência: Caderno de Atenção Domiciliar à Saúde do Ministério da Saúde do Brasil. (2013)</p>
+      <form id="formConsulta">
+        <label>Data:</label>
+        <input type="date" name="data" required>
+        <fieldset>
+            	<legend><h4>Identificação do Paciente</h4></legend>
+
+            <label for="selectPacienteConsulta">Selecione o paciente:</label>
+    <select id="selectPacienteConsulta" required>
+      <option value="">-- Selecione um paciente --</option>
+    </select>
+
+    <div id="dadosPacienteConsulta" style="display: none; margin-top: 20px;">
+  <!-- Campos ocultos para envio -->
+  <input type="hidden" id="campoNomePacienteConsulta" name="nomePaciente">
+  <input type="hidden" id="campoNomeIdConsulta" name="nomeId">
+  <input type="hidden" id="campoNascimentoConsulta" name="dataNascimento">
+
+  <!-- Exibição visual para confirmação -->
+  <div style="border: 2px solid #cce5ff; background-color: #e6f2ff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+    <h3 style="color: #004085; margin-top: 0; display: flex; align-items: center;">
+      <span style="font-size: 1.5em; margin-right: 10px;">✅</span> Confirmação do Paciente Selecionado
+    </h3>
+<br>
+    <label style="font-weight: bold;">Nome do Paciente:</label>
+    <input type="text" id="exibeNomePaciente" readonly style="width: 100%; padding: 10px; font-size: 1.1em; margin-top: 5px; border: 1px solid #b8daff; border-radius: 5px; background-color: #ffffff;">
+  </div>
+</div>
+
+<br>
+
+              <label for="AGE">Idade:</label>
+            	<input type="number" id="AGE" name="AGE" placeholder="Apenas números" required>
+            	
+              <label for="SEX">Sexo:</label>
+            	<select id="SEX" name="SEX" required>
+                	<option value="" disabled selected>Selecione...</option>
+                	<option value="Masculino">Masculino</option>
+                	<option value="Feminino">Feminino</option>
+            	</select>
+            	<label for="QUADRO">Quadro Clínico:</label>
+            	<textarea id="QUADRO" name="QUADRO" rows="4" placeholder="Descreva o quadro clínico..." required></textarea>
+        	</fieldset>
+
+          <fieldset>
+    	    <legend><h4>Avaliação da Pele e Tecidos</h4></legend>
+        	<label for="PELE">Estado Tegumentar:</label>
+        	<select id="PELE" name="PELE" onchange="toggleCustomTextArea(this)" required>
+            	<option value="" disabled selected>Selecione...</option>
+            	<option value="Pele íntegra e saudável">Pele íntegra e saudável</option>
+            	<option value="Outro">Outro (especifique)</option>
+        	</select>
+        	<!-- Campo Personalizado -->
+        	<textarea id="PELE_OPCAO_PERSONALIZADA" name="PELE_OPCAO_PERSONALIZADA" rows="3"
+                  	placeholder="Descreva o estado da pele..."
+                  	style="display:none;"></textarea>
+        	<!-- Coloração da Pele -->
+            	<label for="COR">Coloração da Pele:</label>
+          <select id="COR" name="COR" required>
+              <option value="" disabled selected>Selecione...</option>
+              <option value="Normocorada">Normocorada</option>
+                <option value="Cianose discreta">Cianose discreta</option>
+    <option value="Cianose evidente">Cianose evidente</option>
+    <option value="Eritematoso">Eritematoso</option>
+</select>
+        	<!-- Edema -->
+            	<label for="EDEMA">Edema:</label>
+          <select id="EDEMA" name="EDEMA" required>
+              <option value="" disabled selected>Selecione...</option>
+              <option value="Ausente">Ausente</option>
+              <option value="1+">Cacifo 1+</option>
+              <option value="2+">Cacifo 2++</option>
+              <option value="3+">Cacifo 3+++</option>
+              <option value="4+">Cacifo 4++++</option>
+</select>
+        	<!-- Hidratação da Pele -->
+            	<label for="HIDRAT">Hidratação da Pele:</label>
+<select id="HIDRAT" name="HIDRAT" required>
+    <option value="" disabled selected>Selecione...</option>
+    <option value="Hidratada">Hidratada</option>
+    <option value="Moderada">Moderada</option>
+    <option value="Desidratada">Desidratada</option>
+</select>
+          <!-- Grau de Higiene Corporal -->
+            	<label for="HIGIE">Grau de Higiene Corporal:</label>
+<select id="HIGIE" name="HIGIE" required>
+    <option value="" disabled selected>Selecione...</option>
+    <option value="Adequada">Adequada</option>
+    <option value="Inadequada">Inadequada</option>
+</select>
+        	<!-- Presença de Área Vermelha ou Ponto de Pressão -->
+            	<label for="LPP">Presença de Área Vermelha ou Ponto de Pressão:</label>
+<select id="LPP" name="LPP" required>
+    <option value="" disabled selected>Selecione...</option>
+    <option value="Presente">Presente</option>
+    <option value="Ausente">Ausente</option>
+</select>
+        	<!-- Lesão por Pressão (LPP) -->
+            	<label for="LPP2">Lesão por Pressão (LPP):</label>
+<select id="LPP2" name="LPP2" required>
+    <option value="" disabled selected>Selecione...</option>
+    <option value="Ausente">Ausente</option>
+    <option value="Estágio I">Estágio I</option>
+    <option value="Estágio II">Estágio II</option>
+    <option value="Estágio III">Estágio III</option>
+    <option value="Estágio IV">Estágio IV</option>
+</select>
+	    </fieldset>
+
+      <fieldset>
+    <legend><h4>Entrada de Sinais Vitais</h4></legend>
+
+    <label for="TAX">Temperatura Corporal (°C):</label>
+    <input type="number" id="TAX" name="TAX" min="34" max="42" step="0.1" placeholder="Ex.: 36.5" required>
+
+    <label for="PAS">Pressão Arterial Sistólica (mmHg):</label>
+    <input type="number" id="PAS" name="PAS" placeholder="Ex.: 120" required>
+
+    <label for="PAD">Pressão Arterial Diastólica (mmHg):</label>
+    <input type="number" id="PAD" name="PAD" placeholder="Ex.: 80" required>
+
+    <label for="PULSO">Frequência Cardíaca (bpm):</label>
+    <input type="number" id="PULSO" name="PULSO" min="40" max="180" placeholder="Ex.: 75" required>
+
+    <label for="SPO2">Saturação de Oxigênio (SpO2 %):</label>
+    <input type="number" id="SPO2" name="SPO2" min="0" max="100" placeholder="Ex.: 98" required>
+
+    </fieldset>
+
+    <fieldset>
+    <legend><h4>Classificação dos Sinais Vitais</h4></legend>
+
+    <label for="CLASSDOR">Grau da Dor:</label>
+    <select id="CLASSDOR" name="CLASSDOR" required>
+        <option value="" disabled selected>Selecione...</option>
+        <option value="Sem dor">Sem dor</option>
+        <option value="Dor leve">Dor leve</option>
+        <option value="Dor moderada">Dor moderada</option>
+        <option value="Dor intensa">Dor intensa</option>
+    </select>
+
+    <label for="CLASSTAX">Temperatura Axilar:</label>
+    <select id="CLASSTAX" name="CLASSTAX" required>
+        <option value="" disabled selected>Selecione...</option>
+        <option value="Normotermia">Normotermia</option>
+        <option value="Febril">Febril</option>
+        <option value="Febre">Febre</option>
+        <option value="Hipotermia">Hipotermia</option>
+        <option value="Hipertermia">Hipertermia</option>
+    </select>
+
+    <label for="CLASSPA">Pressão Arterial Sistêmica:</label>
+    <select id="CLASSPA" name="CLASSPA" required>
+        <option value="" disabled selected>Selecione...</option>
+        <option value="Normotensão">Normotensão</option>
+        <option value="Hipotensão">Hipotensão</option>
+        <option value="Hipertensão Estágio I">Hipertensão Estágio I</option>
+        <option value="Hipertensão Estágio II">Hipertensão Estágio II</option>
+        <option value="Crise Hipertensiva">Crise Hipertensiva</option>
+    </select>
+
+    <label for="CLASSPO2">Classificação da Saturação:</label>
+<select id="CLASSPO2" name="CLASSPO2" required>
+    <option value="" disabled selected>Selecione...</option>
+    <option value="Normal">Normal (≥ 95%)</option>
+    <option value="Leve Hipoxemia">Leve Hipoxemia (90-94%)</option>
+    <option value="Moderada Hipoxemia">Moderada Hipoxemia (85-89%)</option>
+    <option value="Grave Hipoxemia">Grave Hipoxemia (< 85%)</option>
+</select>
+</fieldset>
+
+<fieldset>
+  <legend><h4>Padrão de sono e vigília</h4></legend>
+  <label for="SONO">Padrão de Sono:</label>
+<select id="SONO" name="SONO" required>
+    <option value="" disabled selected>Selecione...</option>
+    <option value="Sono Profundo e Restaurador">Sono Profundo e Restaurador</option>
+    <option value="Sono Agitado, Observação de Apneia ou Ronco">Sono Agitado, Observação de Apneia ou Ronco</option>
+    <option value="Despertares Frequentes/Sono Fragmentado">Despertares Frequentes/Sono Fragmentado</option>
+    <option value="Dificuldade para Iniciar o Sono">Dificuldade para Iniciar o Sono</option>
+</select>
+</fieldset>
+
+<fieldset>
+  <!-- Padrão de Alimentação e Nutrição -->
+   <legend><h4>Padrão de Alimentação e Nutrição</h4></legend>
+<label for="VIAALIMENT">Via de alimentação:</label>
+<select id="VIAALIMENT" name="VIAALIMENT" required>
+    <option value="" disabled selected>Selecione...</option>
+    <option value="Via oral">Via oral</option>
+    <option value="Ingestão pastosa">Ingestão pastosa</option>
+    <option value="Ingestão líquida">Ingestão líquida</option>
+    <option value="Interrompido">Interrompido</option>
+    <option value="Gastrostomia">Gastrostomia</option>
+    <option value="Sonda SNE/SNE">Sonda SNE/SNE</option>
+</select>
+
+<label for="INFOALIMENT">Descreva o cenário relacionado à alimentação, informe aceitação e/ou recusa, entre outros:</label>
+<textarea id="INFOALIMENT" name="INFOALIMENT" rows="4" placeholder="Descreva..." oninput="updateFormData('INFOALIMENT', this.value)"></textarea>
+
+<label for="ALIMENT">Aceitabilidade da Dieta:</label>
+<select id="ALIMENT" name="ALIMENT" required>
+    <option value="" disabled selected>Selecione...</option>
+    <option value="Aceita bem">Aceita bem</option>
+    <option value="Aceita parcialmente">Aceita parcialmente</option>
+    <option value="Recusa">Recusa</option>
+</select>
+</fieldset>
+
+<fieldset>
+   <legend><h4>Padrão de Mobilidade</h4></legend>
+    <label for="MOBI">Estado de mobilidade atual do paciente:</label>
+<select id="MOBI" name="MOBI" required>
+    <option value="" disabled selected>Selecione...</option>
+    <option value="Ativa">Ativa</option>
+    <option value="Diminuída">Diminuída</option>
+    <option value="Passiva com auxílio">Passiva com auxílio</option>
+</select>
+
+<label for="OBSMOBI">Observações sobre a mobilidade do paciente:</label>
+<textarea id="OBSMOBI" name="OBSMOBI" rows="4" placeholder="Acrescente observações relevantes sobre a mobilidade do paciente..."></textarea>
+
+<label for="MOBILEITO">Mobilidade no leito:</label>
+<select id="MOBILEITO" name="MOBILEITO" required>
+    <option value="" disabled selected>Selecione...</option>
+    <option value="Com assistência">Com assistência</option>
+    <option value="Levantamento sem auxílio">Levantamento sem auxílio</option>
+    <option value="Restrito ao leito">Restrito ao leito</option>
+</select>
+
+<label for="OBSMOBILEITO">Observações sobre Mobilidade no Leito:</label>
+<textarea id="OBSMOBILEITO" name="OBSMOBILEITO" rows="4" placeholder="Acrescente observações sobre a mobilidade no leito..."></textarea>
+
+<label for="MOBIFORALEITO">Mobilidade fora do leito:</label>
+<select id="MOBIFORALEITO" name="MOBIFORALEITO" required>
+    <option value="" disabled selected>Selecione...</option>
+    <option value="Restrito ao leito">Restrito ao leito</option>
+    <option value="Com assistência">Com assistência</option>
+    <option value="Independente">Independente</option>
+</select>
+
+<label for="OBSMOBIFORALEITO">Observações sobre Mobilidade fora do Leito:</label>
+<textarea id="OBSMOBIFORALEITO" name="OBSMOBIFORALEITO" rows="4" placeholder="Acrescente observações sobre a mobilidade fora do leito..."></textarea>
+</fieldset>
+
+<fieldset>
+  <legend><h4>Padrão de Higiene</h4></legend>
+  <label for="GRAUHIGIE">Qual é o grau de higiene corporal do paciente?</label>
+<select id="GRAUHIGIE" name="GRAUHIGIE" required>
+    <option value="" disabled selected>Selecione...</option>
+    <option value="Adequada">Adequada</option>
+    <option value="Inadequada">Inadequada</option>
+</select>
+
+<label for="OBSHIGIE">Observações sobre a higiene corporal do paciente:</label>
+<textarea id="OBSHIGIE" name="OBSHIGIE" rows="4" placeholder="Acrescente observações relevantes sobre a higiene do paciente..."></textarea>
+
+<label for="HIGIEORAL">Higiene Oral:</label>
+<select id="HIGIEORAL" name="HIGIEORAL" required>
+    <option value="" disabled selected>Selecione...</option>
+    <option value="Adequada">Adequada</option>
+    <option value="Inadequada">Inadequada</option>
+</select>
+
+<label for="OBSHIGIEORAL">Observações sobre Higiene Oral:</label>
+<textarea id="OBSHIGIEORAL" name="OBSHIGIEORAL" rows="4" placeholder="Acrescente observações sobre a higiene oral do paciente..."></textarea>
+
+<label for="HIGIELEITO">Higiene do Leito:</label>
+<select id="HIGIELEITO" name="HIGIELEITO" required>
+    <option value="" disabled selected>Selecione...</option>
+    <option value="Adequada">Adequada</option>
+    <option value="Inadequada">Inadequada</option>
+</select>
+
+<label for="OBSHIGIELEITO">Observações sobre Higiene do Leito:</label>
+<textarea id="OBSHIGIELEITO" name="OBSHIGIELEITO" rows="4" placeholder="Acrescente observações sobre a higiene do leito..."></textarea>
+</fieldset>
+
+<fieldset>
+  <legend><h4>Sondas e Dispositivos (TQT, VM, Bomba de Infusão)</h4></legend>
+
+  <label for="FOLEY">Sonda Vesical (Foley):</label>
+  <select id="FOLEY" name="FOLEY" onchange="updateSondaStatus('FOLEY')">
+    <option value="" disabled selected>Selecione...</option>
+    <option value="Presente">Presente</option>
+    <option value="Ausente">Ausente</option>
+  </select>
+  <input type="text" id="FOLEY_STATUS" name="FOLEY_STATUS" placeholder="Ex.: Funcional, obstruída..." disabled>
+  <label for="FOLEY_TROCA">Troca Realizada?</label>
+  <select id="FOLEY_TROCA" name="FOLEY_TROCA">
+    <option value="" disabled selected>Selecione...</option>
+    <option value="Sim">Sim</option>
+    <option value="Não">Não</option>
+  </select>
+
+  <label for="CISTOSTOMIA">Cistostomia:</label>
+  <select id="CISTOSTOMIA" name="CISTOSTOMIA" onchange="updateSondaStatus('CISTOSTOMIA')">
+    <option value="" disabled selected>Selecione...</option>
+    <option value="Presente">Presente</option>
+    <option value="Ausente">Ausente</option>
+  </select>
+  <input type="text" id="CISTOSTOMIA_STATUS" name="CISTOSTOMIA_STATUS" placeholder="Ex.: Boa fixação, secreção..." disabled>
+  <label for="CISTOSTOMIA_TROCA">Troca Realizada?</label>
+  <select id="CISTOSTOMIA_TROCA">
+    <option value="" disabled selected>Selecione...</option>
+    <option value="Sim">Sim</option>
+    <option value="Não">Não</option>
+  </select>
+
+  <label for="ILEOCOLO">Ileostomia / Colostomia:</label>
+  <select id="ILEOCOLO" name="ILEOCOLO" onchange="updateSondaStatus('ILEOCOLO')">
+    <option value="" disabled selected>Selecione...</option>
+    <option value="Presente">Presente</option>
+    <option value="Ausente">Ausente</option>
+  </select>
+  <input type="text" id="ILEOCOLO_STATUS" name="ILEOCOLO_STATUS" placeholder="Ex.: Pele íntegra, lesão perilesional..." disabled>
+  <label for="ILEOCOLO_TROCA">Troca Realizada?</label>
+  <select id="ILEOCOLO_TROCA" name="ILEOCOLO_TROCA">
+    <option value="" disabled selected>Selecione...</option>
+    <option value="Sim">Sim</option>
+    <option value="Não">Não</option>
+  </select>
+
+  <label for="TRAQUEO">Traqueostomia:</label>
+  <select id="TRAQUEO" name="TRAQUEO" onchange="updateSondaStatus('TRAQUEO')">
+    <option value="" disabled selected>Selecione...</option>
+    <option value="Presente">Presente</option>
+    <option value="Ausente">Ausente</option>
+  </select>
+  <input type="text" id="TRAQUEO_STATUS" name="TRAQUEO_STATUS" placeholder="Ex.: Hidratação adequada, secreção presente..." disabled>
+  <label for="TRAQUEO_TROCA">Troca Realizada?</label>
+  <select id="TRAQUEO_TROCA" name="TRAQUEO_TROCA">
+    <option value="" disabled selected>Selecione...</option>
+    <option value="Sim">Sim</option>
+    <option value="Não">Não</option>
+  </select>
+
+  <label for="VM">Ventilação Mecânica:</label>
+  <select id="VM" name="VM" onchange="updateSondaStatus('VM')">
+    <option value="" disabled selected>Selecione...</option>
+    <option value="Presente">Presente</option>
+    <option value="Ausente">Ausente</option>
+  </select>
+  <input type="text" id="VM_STATUS" name="VM_STATUS" placeholder="Ex.: Ventilação efetiva, 1 litro de oxigênio..." disabled>
+  <label for="VM_TROCA">Troca Realizada?</label>
+  <select id="VM_TROCA" name="VM_TROCA">
+    <option value="" disabled selected>Selecione...</option>
+    <option value="Sim">Sim</option>
+    <option value="Não">Não</option>
+  </select>
+
+  <label for="BOMBA">Bomba de Infusão:</label>
+  <select id="BOMBA" name="BOMBA" onchange="updateSondaStatus('BOMBA')">
+    <option value="" disabled selected>Selecione...</option>
+    <option value="Presente">Presente</option>
+    <option value="Ausente">Ausente</option>
+  </select>
+  <input type="text" id="BOMBA_STATUS" name="BOMBA_STATUS" placeholder="Ex.: Bomba funcional para alimentação/água/medicação..." disabled>
+  <label for="BOMBA_TROCA">Troca Realizada?</label>
+  <select id="BOMBA_TROCA" name="BOMBA_TROCA">
+    <option value="" disabled selected>Selecione...</option>
+    <option value="Sim">Sim</option>
+    <option value="Não">Não</option>
+  </select>
+
+  <label for="FUNCADEQ">Observações gerais sobre sondas e dispositivos:</label>
+  <textarea id="FUNCADEQ" name="FUNCADEQ" rows="4" placeholder="Detalhes sobre funcionalidade, trocas e intercorrências"></textarea>
+</fieldset>
+
+        <label>Responsável (Nome e Coren):</label>
+        <input type="text" name="RESPONSAVEL" required>
+
+        <button type="button" class="enviar" onclick="enviarConsulta()">Enviar</button>
+      </form>
+      <p id="msgConsulta"></p>
+</div>
+
+<!-- CARD - Diagnóstico e Prescrição de Enfermagem -->
+<div class="card" id="cardDiagnostico" style="display: none;">
+  <h2>Registro de Diagnósticos e Prescrição de Enfermagem</h2>
+  <form id="formDiagnostico">
+    <label>Data:</label>
+    <input type="date" name="data" required>
+
+    <fieldset>
+    <legend><h4>Identificação automática do Paciente</h4></legend>
+    <label for="selectPacienteDiagnostico">Selecione o paciente:</label>
+    <select id="selectPacienteDiagnostico" required>
+      <option value="">-- Selecione um paciente --</option>
+    </select>
+
+    <div id="dadosPacienteDiagnostico" style="display: none; margin-top: 20px;">
+  <!-- Campos ocultos para envio -->
+  <input type="hidden" id="campoNomePacienteDiagnostico" name="nomePaciente">
+  <input type="hidden" id="campoNomeIdDiagnostico" name="nomeId">
+  <input type="hidden" id="campoNascimentoDiagnostico" name="dataNascimento">
+<br>
+
+</div>
+<br>
+</fieldset>
+<br>
+
+  <!-- Passo 1: Selecionar Domínio -->
+  <fieldset>
+    <legend>1️⃣ Escolha o Domínio</legend>
+    <label>Domínio:</label>
+    <select id="dominioSelect" onchange="atualizarClasses()">
+      <option value="" disabled selected>Selecione...</option>
+      <!-- Opções serão carregadas via JS -->
+    </select>
+  </fieldset>
+
+  <!-- Passo 2: Selecionar Classe -->
+  <fieldset id="classeBox" style="display:none;">
+    <legend>2️⃣ Escolha a Classe</legend>
+    <label>Classe:</label>
+    <select id="classeSelect" onchange="atualizarTitulos()">
+      <option value="" disabled selected>Selecione...</option>
+    </select>
+  </fieldset>
+
+  <!-- Passo 3: Selecionar Diagnóstico -->
+  <fieldset id="diagnosticoBox" style="display:none;">
+    <legend>3️⃣ Escolha o Diagnóstico</legend>
+    <label>Diagnóstico de Enfermagem:</label>
+    <select id="diagnosticoSelect">
+      <option value="" disabled selected>Selecione...</option>
+    </select>
+  </fieldset>
+
+  <button type="button" class="nav-button" onclick="adicionarDiagnostico()">➕ Adicionar Diagnóstico</button>
+
+  <!-- Diagnósticos Selecionados -->
+  <div id="diagnosticosSalvosBox" style="display:none;">
+    <fieldset>
+      <legend>📌 Diagnósticos Selecionados</legend>
+      <div id="listaDiagnosticos"></div>
+    </fieldset>
+  </div>
+
+  <!-- Responsável e envio -->
+  <label>Responsável (Nome e Coren):</label>
+  <input type="text" id="responsavelDiagnostico" required>
+
+  <button type="button" onclick="enviarDiagnosticos()">📤 Enviar Diagnósticos</button>
+</form> <!-- ← FECHAMENTO QUE FALTAVA! -->
+  <p id="msgDiagnostico"></p>
+</div>
+
+<!-- CARD ENCERRAMENTO DO CUIDADO DE ENFERMAGEM-  NÃO ALTERAR MAIS -->
+<div class="card" id="altaCard">
+  <h2>Encerramento do Cuidado de Enfermagem – Atenção Domiciliar</h2>
+  <form id="formAlta">
+
+     <label>Data:</label>
+    <input type="date" name="data" required>
+
+    <fieldset>
+    <legend><h4>Identificação automática do Paciente</h4></legend>
+    <label for="selectPacienteAlta">Selecione o paciente:</label>
+    <select id="selectPacienteAlta" required>
+      <option value="">-- Selecione um paciente --</option>
+    </select>
+
+    <div id="dadosPacienteAlta" style="display: none; margin-top: 20px;">
+  <!-- Campos ocultos para envio -->
+  <input type="hidden" id="campoNomePacienteAlta" name="nomePaciente">
+  <input type="hidden" id="campoNomeIdAlta" name="nomeId">
+  <input type="hidden" id="campoNascimentoAlta" name="dataNascimento">
+<br>
+</div>
+<br>
+<br>
+    <fieldset>
+    <label>Data e hora do encerramento do cuidado:</label>
+    <input type="datetime-local" name="dataHora" required>
+
+    <label>Motivo da alta:</label>
+<select name="motivoAlta" required>
+  <option value="" disabled selected>Selecione...</option>
+
+  <!-- Altas por conclusão do cuidado -->
+  <option value="Alta por cuidado concluído com estabilidade clínica">Alta por cuidado concluído com estabilidade clínica</option>
+  <option value="Alta após reabilitação funcional com sucesso">Alta após reabilitação funcional com sucesso</option>
+  <option value="Alta por melhora significativa do quadro clínico">Alta por melhora significativa do quadro clínico</option>
+
+  <!-- Altas por óbito -->
+  <option value="Alta por óbito em domicílio">Alta por óbito em domicílio</option>
+  <option value="Alta por óbito em unidade hospitalar">Alta por óbito em unidade hospitalar</option>
+
+  <!-- Altas por decisão da família -->
+  <option value="Encerramento por decisão familiar sem intercorrências">Encerramento por decisão familiar sem intercorrências</option>
+  <option value="Encerramento por recusa da continuidade do serviço pela família">Encerramento por recusa da continuidade do serviço pela família</option>
+
+  <!-- Encaminhamentos -->
+  <option value="Encaminhado para hospital por agravamento do quadro">Encaminhado para hospital por agravamento do quadro</option>
+  <option value="Encaminhado para serviço de maior complexidade">Encaminhado para serviço de maior complexidade</option>
+  <option value="Transferido para outra instituição de longa permanência">Transferido para outra instituição de longa permanência</option>
+  <option value="Transferido para internação hospitalar programada">Transferido para internação hospitalar programada</option>
+</select>
+
+
+    <label>Desfecho do cuidado de Enfermagem:</label>
+    <select name="desfechoCuidado" required>
+      <option value="" disabled selected>Selecione...</option>
+      <option value="Cuidado concluído com estabilidade">Cuidado concluído com estabilidade</option>
+      <option value="Encaminhado para serviço de maior complexidade">Encaminhado para serviço de maior complexidade</option>
+      <option value="Interrompido por óbito">Interrompido por óbito</option>
+      <option value="Encerramento por decisão familiar/responsável">Encerramento por decisão familiar/responsável</option>
+      <option value="Encerramento administrativo">Encerramento administrativo</option>
+    </select>
+
+    <label>Procedência do paciente:</label>
+  <select name="procedencia" required>
+    <option value="" disabled selected>Selecione...</option>
+    <option value="Domicílio">Domicílio</option>
+    <option value="Hospital">Hospital</option>
+    <option value="ILPI">ILPI (Instituição de Longa Permanência)</option>
+  </select>
+
+    <label>Condições de chegada:</label>
+  <select name="condicoesChegada" required>
+    <option value="" disabled selected>Selecione...</option>
+    <option value="Estável">Estável</option>
+    <option value="Estável com suporte">Estável com suporte</option>
+    <option value="Frágil">Frágil</option>
+    <option value="Grave">Grave</option>
+  </select>
+
+    <label>Nível de consciência:</label>
+  <select name="nivelConsciencia" required>
+    <option value="" disabled selected>Selecione...</option>
+    <option value="Consciente">Consciente</option>
+    <option value="Desorientado">Desorientado</option>
+    <option value="Rebaixado">Rebaixado</option>
+  </select>
+
+    <label>Presença de acompanhante ou responsável:</label>
+    <input type="text" name="acompanhante">
+
+    <label>Condições de higiene:</label>
+  <select name="higiene" required>
+    <option value="" disabled selected>Selecione...</option>
+    <option value="Prejudicada">Prejudicada</option>
+    <option value="Preservada">Preservada</option>
+    <option value="Parcial">Parcial</option>
+    <option value="Necessita auxílio para banho e higiene íntima">Necessita auxílio para banho e higiene íntima</option>
+  </select>
+
+    <label>Presença de lesões prévias e localização:</label>
+    <textarea name="lesoes"></textarea>
+
+    <label>Deficiências (se houver):</label>
+  <select name="deficiencias" required>
+    <option value="" disabled selected>Selecione...</option>
+    <option value="Cognitiva">Cognitiva</option>
+    <option value="Motora">Motora</option>
+    <option value="Sensorial">Sensorial</option>
+    <option value="Não">Não</option>
+  </select>
+
+    <label>Uso de próteses ou órteses:</label>
+    <textarea name="protese"></textarea>
+
+    <label>Queixas principais durante o cuidado:</label>
+    <textarea name="queixas"></textarea>
+
+    <label>Procedimentos/cuidados realizados durante o acompanhamento:</label>
+    <textarea name="procedimentos"></textarea>
+
+    <label>Orientações finais prestadas ao cuidador/familiar:</label>
+    <textarea name="orientacoes"></textarea>
+
+    <label>Houve hospitalização durante o período do cuidado?</label>
+    <select name="houveHospitalizacao" required>
+      <option value="" disabled selected>Selecione...</option>
+      <option value="Sim">Sim</option>
+      <option value="Não">Não</option>
+    </select>
+
+    <label>A hospitalização foi considerada evitável?</label>
+    <select name="hospitalizacaoEvitavel">
+      <option value="" disabled selected>Selecione...</option>
+      <option value="Sim">Sim</option>
+      <option value="Não">Não</option>
+    </select>
+    </fieldset>
+    <label>Responsável pelo encerramento do cuidado (Nome e Coren):</label>
+    <input type="text" name="responsavel" required>
+
+    <button type="button" class="enviar" onclick="enviarAlta()">Enviar</button>
+  </form>
+  <p id="msgAlta"></p>
+</div>
+
+<!-- CARD INTERCORRÊNCIAS - NÃO ALTERAR MAIS -->
+<div class="card" id="intercorrenciaCard">
+  <h2>Registro de Intercorrências Clínicas para Atenção Domiciliar à Saúde</h2>
+  <p>Instrumento elaborado com recurso de inteligência artigical generativa.</p>
+  <form id="formIntercorrencia">
+    <label>Data da intercorrência:</label>
+    <input type="date" name="data" required>
+
+    <fieldset>
+    <legend><h4>Identificação automática do Paciente</h4></legend>
+    <label for="selectPacienteIntercorrencia">Selecione o paciente:</label>
+    <select id="selectPacienteIntercorrencia" required>
+      <option value="">-- Selecione um paciente --</option>
+    </select>
+
+    <div id="dadosPacienteIntercorrencia" style="display: none; margin-top: 20px;">
+  <!-- Campos ocultos para envio -->
+  <input type="hidden" id="campoNomePacienteIntercorrencia" name="nomePaciente">
+  <input type="hidden" id="campoNomeIdIntercorrencia" name="nomeId">
+  <input type="hidden" id="campoNascimentoIntercorrencia" name="dataNascimento">
+<br>
+</div>
+<br>
+<br>
+
+    <label>Tipo de intercorrência:</label>
+    <select name="tipoIntercorrencia" required>
+      <option value="" disabled selected>Selecione...</option>
+      <option value="Evento Adverso">Evento Adverso (houve dano ao paciente)</option>
+      <option value="Incidente">Incidente (não houve dano, mas poderia ter causado)</option>
+      <option value="Quase-incidente">Quase-incidente (não ocorreu, mas havia potencial)</option>
+    </select>
+
+    <label>Gravidade da intercorrência:</label>
+    <select name="gravidadeIntercorrencia" required>
+      <option value="" disabled selected>Selecione...</option>
+      <option value="Leve">Leve</option>
+      <option value="Moderada">Moderada</option>
+      <option value="Grave">Grave</option>
+    </select>
+
+    <label>Categoria da intercorrência:</label>
+    <select name="categoriaIntercorrencia" onchange="toggleOutroCategoria(this)">
+      <option value="" disabled selected>Selecione...</option>
+      <option value="Medicamentos">Medicamentos</option>
+      <option value="Dispositivos">Dispositivos</option>
+      <option value="Queda">Queda</option>
+      <option value="Infecção">Infecção</option>
+      <option value="Lesão por Pressão">Lesão por Pressão</option>
+      <option value="Outro">Outro</option>
+    </select>
+
+    <div id="campoOutroCategoria" style="display: none;">
+      <label>Descreva a outra categoria:</label>
+      <input type="text" name="categoriaOutro">
+    </div>
+
+    <label>Local onde ocorreu a intercorrência:</label>
+    <input type="text" name="localIntercorrencia" placeholder="Ex: Quarto, Banheiro, Sala etc.">
+
+    <label>Profissional presente no momento (se houver):</label>
+    <input type="text" name="profissionalPresente" placeholder="Nome e função">
+
+    <label>Descrição detalhada da intercorrência:</label>
+    <textarea name="descricao" rows="4" required></textarea>
+
+    <label>Consequências/danos ao paciente:</label>
+    <textarea name="consequencias" rows="3"></textarea>
+
+    <label>Causa provável:</label>
+    <textarea name="causaProvavel" rows="3"></textarea>
+
+    <label>Ações imediatas adotadas:</label>
+    <textarea name="acoesImediatas" rows="3"></textarea>
+
+    <label>Foi realizada notificação formal?</label>
+    <select name="notificacaoFormal" onchange="toggleNotificacaoDetalhada(this)">
+      <option value="" disabled selected>Selecione...</option>
+      <option value="Sim">Sim</option>
+      <option value="Não">Não</option>
+    </select>
+
+    <div id="campoDetalheNotificacao" style="display: none;">
+      <label>Detalhe a notificação (local, protocolo etc.):</label>
+      <textarea name="detalheNotificacao" rows="2"></textarea>
+    </div>
+
+    <label>Tempo entre ocorrência e atendimento (em minutos):</label>
+    <input type="number" name="tempoResposta" min="0">
+
+    <label>Serviço de urgência acionado:</label>
+    <select name="servicoUrgencia">
+      <option value="" disabled selected>Selecione...</option>
+      <option value="SAMU">SAMU</option>
+      <option value="UPA">UPA</option>
+      <option value="Ambulância privada">Ambulância privada</option>
+      <option value="Não foi necessário">Não foi necessário</option>
+    </select>
+
+    <label>Orientações prestadas ao paciente/família:</label>
+    <textarea name="orientacoes" rows="3"></textarea>
+
+    <label>Paciente/família orientado(a) sobre sinais de alerta?</label>
+    <select name="orientacaoAlerta">
+      <option value="" disabled selected>Selecione...</option>
+      <option value="Sim">Sim</option>
+      <option value="Não">Não</option>
+    </select>
+
+    <label>Houve Hospitalização durante atendimento?</label>
+    <select name="houveHospitalizacao" required>
+      <option value="" disabled selected>Selecione...</option>
+      <option value="Sim">Sim</option>
+      <option value="Não">Não</option>
+    </select>
+
+    <label>Considerada hospitalização evitável?</label>
+    <select name="hospitalizacaoEvitavel">
+      <option value="" disabled selected>Selecione...</option>
+      <option value="Sim">Sim</option>
+      <option value="Não">Não</option>
+    </select>
+
+    <label>Desfecho imediato da intercorrência:</label>
+    <select name="desfecho">
+      <option value="" disabled selected>Selecione...</option>
+      <option value="Paciente estabilizado no domicílio">Paciente estabilizado no domicílio</option>
+      <option value="Encaminhado ao hospital">Encaminhado ao hospital</option>
+      <option value="Encaminhado à UBS">Encaminhado à UBS</option>
+      <option value="Óbito no domicílio">Óbito no domicílio</option>
+    </select>
+
+    <label>Responsável pelo registro (Nome e Coren):</label>
+    <input type="text" name="responsavel" required>
+
+    <button type="button" class="enviar" onclick="enviarIntercorrencia()">Enviar</button>
+  </form>
+  <p id="msgIntercorrencia"></p>
+</div>
+
+</div>
+
+<script>
+  
+const equipes = {
+  "Equipe Florence": {
+    enfermeiros: ["Enf 1"],
+    tecnicos: ["Téc 1", "Téc 2", "Téc 3"]
+  },
+  "Equipe Horta": {
+    enfermeiros: ["Enf 2"],
+    tecnicos: ["Téc 4", "Téc 5", "Téc 6"]
+  },
+  "Equipe Nery": {
+    enfermeiros: ["Enf 3"],
+    tecnicos: ["Téc 7", "Téc 8", "Téc 9"]
+  },
+  "Equipe Peplau": {
+    enfermeiros: ["Enf 4"],
+    tecnicos: ["Téc 10", "Téc 11", "Téc 12"]
+  }
+};
+
+let equipeResponsavel = ""; // variável global
+
+function atualizarEquipe() {
+  const equipeSelecionada = document.getElementById("selectEquipe").value;
+  equipeResponsavel = equipeSelecionada; // ✅ agora armazenando o valor
+
+  const enfSelect = document.getElementById("enfermeiroResponsavel");
+  const tecSelect = document.getElementById("tecnicosResponsaveis");
+
+  // Limpa os campos
+  enfSelect.innerHTML = '<option value="">Selecione...</option>';
+  tecSelect.innerHTML = '';
+
+  if (!equipeSelecionada || !equipes[equipeSelecionada]) return;
+
+  // Preenche enfermeiros
+  equipes[equipeSelecionada].enfermeiros.forEach(enf => {
+    const option = document.createElement("option");
+    option.value = enf;
+    option.textContent = enf;
+    enfSelect.appendChild(option);
+  });
+
+  // Preenche técnicos
+  equipes[equipeSelecionada].tecnicos.forEach(tec => {
+    const option = document.createElement("option");
+    option.value = tec;
+    option.textContent = tec;
+    tecSelect.appendChild(option);
+  });
+}
+
+const matriculas = {
+  // Gestor
+  "0000": { perfil: "gestor" },
+
+  // Assistencialistas (Enfermeiros)
+  "1111": { perfil: "assistencialista", equipe: "Equipe Florence" },
+  "1112": { perfil: "assistencialista", equipe: "Equipe Horta" },
+  "1113": { perfil: "assistencialista", equipe: "Equipe Nery" },
+  "1114": { perfil: "assistencialista", equipe: "Equipe Peplau" },
+
+  // Técnicos - Florence
+  "2221": { perfil: "tecnico", equipe: "Equipe Florence" },
+  "2222": { perfil: "tecnico", equipe: "Equipe Florence" },
+  "2223": { perfil: "tecnico", equipe: "Equipe Florence" },
+
+  // Técnicos - Horta
+  "2231": { perfil: "tecnico", equipe: "Equipe Horta" },
+  "2232": { perfil: "tecnico", equipe: "Equipe Horta" },
+  "2233": { perfil: "tecnico", equipe: "Equipe Horta" },
+
+  // Técnicos - Nery
+  "2241": { perfil: "tecnico", equipe: "Equipe Nery" },
+  "2242": { perfil: "tecnico", equipe: "Equipe Nery" },
+  "2243": { perfil: "tecnico", equipe: "Equipe Nery" },
+
+  // Técnicos - Peplau 
+  "2251": { perfil: "tecnico", equipe: "Equipe Peplau" },
+  "2252": { perfil: "tecnico", equipe: "Equipe Peplau" },
+  "2253": { perfil: "tecnico", equipe: "Equipe Peplau" }
+};
+
+
+const menus = {
+  gestor: [
+    { text: "Identificação - RT", func: "abrirCard('orientacaoCard')" },
+    { text: "Cadastro", func: "abrirCard('cardCadastro')" },
+    { text: "Registro de intercorrências", func: "abrirCard('intercorrenciaCard')" }
+  ],
+  assistencialista: [
+    { text: "Identificação - RT", func: "abrirCard('orientacaoCard')" },
+    { text: "Admissão de Enfermagem para Atenção Domiciliar - Enfermeiro", func: "abrirCard('admissaoCard')" },
+    { text: "Consulta de Enfermagem - Enfermeiro", func: "abrirCard('consultaCard')" },
+    { text: "Diagnósticos e Intervenções de Enfermagem - Enfermeiro", func: "abrirCard('cardDiagnostico')" },
+    { text: "Encerramento do Cuidado de Enfermagem – Atenção Domiciliar", func: "abrirCard('altaCard')" },
+    { text: "Registro de intercorrências", func: "abrirCard('intercorrenciaCard')" }
+  ],
+  tecnico: [
+    { text: "Identificação - RT", func: "abrirCard('orientacaoCard')" },
+    { text: "Anotação de Enfermagem - Técnico em Enfermagem", func: "abrirCard('anotacaoCard')" },
+    { text: "Registro de intercorrências", func: "abrirCard('intercorrenciaCard')" }
+  ]
+};
+
+ function validarMatricula() {
+  const matricula = document.getElementById("matricula").value.trim();
+  const dadosMatricula = matriculas[matricula];
+
+  if (!dadosMatricula) {
+    alert("Matrícula inválida!");
+    return;
+  }
+
+  const perfil = dadosMatricula.perfil;
+  const menu = menus[perfil];
+
+  if (menu) {
+    sessionStorage.setItem("perfil", perfil);
+
+    if (dadosMatricula.equipe) {
+      sessionStorage.setItem("equipeResponsavel", dadosMatricula.equipe);
+    }
+
+    // Mostra tela principal
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('mainScreen').style.display = 'flex';
+
+    // Monta e mostra o menu correto
+    montarMenu(perfil);
+
+    // Abre card de boas-vindas
+    abrirCard('bemvindoCard');
+  } else {
+    alert("Perfil sem permissões definidas.");
+  }
+}
+
+    function montarMenu(perfil) {
+    const sidebar = document.getElementById('sidebar');
+
+    // Cria os botões do menu de acordo com o perfil
+    menus[perfil].forEach(item => {
+    const btn = document.createElement('button');
+    btn.innerText = item.text;
+    btn.setAttribute('onclick', item.func);
+    sidebar.appendChild(btn);
+    });
+
+    // Cria o botão de logout no final do menu
+    const btnLogout = document.createElement('button');
+    btnLogout.innerText = "Sair";
+    btnLogout.onclick = logout;
+    sidebar.appendChild(btnLogout);
+    }
+
+function logout() {
+  // Esconde tela principal e menu
+  document.getElementById('mainScreen').style.display = 'none';
+
+  // Esconde qualquer card aberto
+  const cards = document.querySelectorAll('.card');
+  cards.forEach(c => c.style.display = 'none');
+
+  // Limpa menu lateral
+  document.getElementById('sidebar').innerHTML = '<h2>Menu</h2>';
+
+  // Limpa campo matrícula
+  document.getElementById('matricula').value = '';
+
+  // Retorna para tela login
+  document.getElementById('loginScreen').style.display = 'flex';
+}
+
+function logout() {
+  const confirmLogout = confirm("Deseja realmente sair?");
+  if (!confirmLogout) return;
+
+  document.getElementById('mainScreen').style.display = 'none';
+  const cards = document.querySelectorAll('.card');
+  cards.forEach(c => c.style.display = 'none');
+  document.getElementById('sidebar').innerHTML = '<h2>Menu</h2>';
+  document.getElementById('matricula').value = '';
+  document.getElementById('loginScreen').style.display = 'flex';
+}
+
+  function updateSondaStatus(sondaId) {
+  const select = document.getElementById(sondaId);
+  const statusField = document.getElementById(`${sondaId}_STATUS`);
+  
+  if (select.value === "Presente") {
+    statusField.disabled = false;
+    statusField.placeholder = "Descreva a situação: funcional, obstruída, etc.";
+  } else {
+    statusField.value = ""; // limpa o campo
+    statusField.disabled = true;
+    statusField.placeholder = "Ex.: Funcional, obstruída...";
+  }
+}
+
+    // Função envio Admissão
+    function enviarAdmissao() {
+      const form = document.getElementById("formAdmissao");
+      const dados = Object.fromEntries(new FormData(form));
+
+      google.script.run
+        .withSuccessHandler(() => {
+          document.getElementById("msgAdmissao").innerText = "Dados enviados com sucesso!";
+          document.getElementById("msgAdmissao").className = "success";
+          form.reset();
+        })
+        .withFailureHandler(() => {
+          document.getElementById("msgAdmissao").innerText = "Erro ao enviar!";
+          document.getElementById("msgAdmissao").className = "error";
+        })
+        .salvarDadosAdmissao(dados);
+    }
+
+  function salvarDadosAdmissao(dados) {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Admissao');
+  sheet.appendRow([
+    new Date(), 
+    dados.nomePaciente,
+    dados.nomeId,
+    dados.dataNascimento,
+    dados.sexo,
+    dados.equipe,
+    dados.dataHora,
+    dados.statusAtendimento,
+    dados.procedencia,
+    dados.condicoesChegada,
+    dados.nivelConsciencia,
+    dados.acompanhante,
+    dados.higiene,
+    dados.lesoes,
+    dados.deficiencias,
+    dados.protese,
+    dados.queixas,
+    dados.procedimentos,
+    dados.orientacoes,
+    dados.percepcaoSensorial,  // Campo Braden
+    dados.umidade,
+    dados.atividade,
+    dados.mobilidade,
+    dados.nutricao,
+    dados.friccao,
+    dados.pontuacaoBraden,
+    dados.interpretacaoBraden, // NOVO
+    dados.historicoQueda,      // Campo Morse
+    dados.diagnosticoSecundario,
+    dados.auxilioDeambulacao,
+    dados.terapiaIV,
+    dados.marcha,
+    dados.estadoMental,
+    dados.pontuacaoMorse,
+    dados.interpretacaoMorse,  // NOVO
+    dados.responsavel
+  ]);
+}
+
+    // Função envio Anotação de Técnico em Enfermagem
+    function enviarAnotacao() {
+      const form = document.getElementById("formAnotacao");
+      const dados = Object.fromEntries(new FormData(form));
+
+      google.script.run
+        .withSuccessHandler(() => {
+          document.getElementById("msgAnotacao").innerText = "Anotação de Enfermagem enviada!";
+          document.getElementById("msgAnotacao").className = "success";
+          form.reset();
+        })
+        .withFailureHandler(() => {
+          document.getElementById("msgAnotacao").innerText = "Erro!";
+          document.getElementById("msgAnotacao").className = "error";
+        })
+        .salvarDadosAnotacao(dados);
+    }
+
+    // Função envio Alta
+    function enviarAlta() {
+      const form = document.getElementById("formAlta");
+      const dados = Object.fromEntries(new FormData(form));
+
+      google.script.run
+        .withSuccessHandler(() => {
+          document.getElementById("msgAlta").innerText = "Encerramento do plano de cuidado!";
+          document.getElementById("msgAlta").className = "success";
+          form.reset();
+        })
+        .withFailureHandler(() => {
+          document.getElementById("msgAlta").innerText = "Erro!";
+          document.getElementById("msgAlta").className = "error";
+        })
+        .salvarDadosAlta(dados);
+    }
+
+    // Função envio Consulta de Enfermagem
+    function enviarConsulta() {
+      const form = document.getElementById("formConsulta");
+      const dados = Object.fromEntries(new FormData(form));
+
+      google.script.run
+        .withSuccessHandler(() => {
+          document.getElementById("msgConsulta").innerText = "Consulta de Enfermagem registrada!";
+          document.getElementById("msgConsulta").className = "success";
+          form.reset();
+        })
+        .withFailureHandler(() => {
+          document.getElementById("msgConsulta").innerText = "Erro!";
+          document.getElementById("msgConsulta").className = "error";
+        })
+        .salvarDadosConsulta(dados);
+    }
+
+    // Função envio Intercorrências Clínicas
+    function enviarIntercorrencia() {
+      const form = document.getElementById("formIntercorrencia");
+      const dados = Object.fromEntries(new FormData(form));
+
+      google.script.run
+        .withSuccessHandler(() => {
+          document.getElementById("msgIntercorrencia").innerText = "Intercorrência registrada!";
+          document.getElementById("msgIntercorrencia").className = "success";
+          form.reset();
+        })
+        .withFailureHandler(() => {
+          document.getElementById("msgIntercorrencia").innerText = "Erro!";
+          document.getElementById("msgIntercorrencia").className = "error";
+        })
+        .salvarDadosIntercorrencia(dados);
+    }
+
+function toggleOutroCategoria(select) {
+const campoOutro = document.getElementById('campoOutroCategoria');
+campoOutro.style.display = select.value === 'Outro' ? 'block' : 'none';
+  }
+
+function toggleNotificacaoDetalhada(select) {
+const campo = document.getElementById('campoDetalheNotificacao');
+campo.style.display = select.value === 'Sim' ? 'block' : 'none';
+  }
+
+
+    function calcularBraden() {
+  const sensorial = parseInt(document.querySelector('[name="percepcaoSensorial"]').value) || 0;
+  const umidade = parseInt(document.querySelector('[name="umidade"]').value) || 0;
+  const atividade = parseInt(document.querySelector('[name="atividade"]').value) || 0;
+  const mobilidade = parseInt(document.querySelector('[name="mobilidade"]').value) || 0;
+  const nutricao = parseInt(document.querySelector('[name="nutricao"]').value) || 0;
+  const friccao = parseInt(document.querySelector('[name="friccao"]').value) || 0;
+
+  const total = sensorial + umidade + atividade + mobilidade + nutricao + friccao;
+  document.getElementById('pontuacaoBraden').value = total;
+
+  let interpretacao = "";
+  if (total >= 19) {
+    interpretacao = "Baixo Risco";
+  } else if (total >= 15) {
+    interpretacao = "Risco Moderado";
+  } else if (total >= 13) {
+    interpretacao = "Risco Alto";
+  } else {
+    interpretacao = "Risco Muito Alto";
+  }
+
+  // Exibe na tela
+  document.getElementById('interpretacaoBraden').innerText = "Classificação: " + interpretacao;
+
+  // Atualiza o campo oculto para salvar no formulário
+  document.getElementById('interpretacaoBradenInput').value = interpretacao;
+}
+
+function calcularMorse() {
+  const queda = parseInt(document.querySelector('[name="historicoQueda"]').value) || 0;
+  const diagnostico = parseInt(document.querySelector('[name="diagnosticoSecundario"]').value) || 0;
+  const auxilio = parseInt(document.querySelector('[name="auxilioDeambulacao"]').value) || 0;
+  const terapia = parseInt(document.querySelector('[name="terapiaIV"]').value) || 0;
+  const marcha = parseInt(document.querySelector('[name="marcha"]').value) || 0;
+  const mental = parseInt(document.querySelector('[name="estadoMental"]').value) || 0;
+
+  const total = queda + diagnostico + auxilio + terapia + marcha + mental;
+  document.getElementById('pontuacaoMorse').value = total;
+
+  let interpretacao = "";
+  if (total >= 45) {
+    interpretacao = "Alto Risco de Queda";
+  } else if (total >= 25) {
+    interpretacao = "Risco Moderado de Queda";
+  } else {
+    interpretacao = "Baixo Risco de Queda";
+  }
+
+  // Exibe na tela
+  document.getElementById('interpretacaoMorse').innerText = "Classificação: " + interpretacao;
+
+  // Atualiza o campo oculto para salvar no formulário
+  document.getElementById('interpretacaoMorseInput').value = interpretacao;
+}
+
+
+// Função envio Cadastro de Cliente
+    function enviarCadastro() {
+      const form = document.getElementById("formCadastro");
+      const dados = Object.fromEntries(new FormData(form));
+
+      google.script.run
+        .withSuccessHandler(() => {
+          document.getElementById("msgCadastro").innerText = "Cadastro de cliente registrado!";
+          document.getElementById("msgCadastro").className = "success";
+          form.reset();
+        })
+        .withFailureHandler(() => {
+          document.getElementById("msgCadastro").innerText = "Erro!";
+          document.getElementById("msgCadastro").className = "error";
+        })
+        .salvarDadosCadastro(dados);
+    }
+
+function gerarIdentificador() {
+  google.script.run
+    .withSuccessHandler(function (idGerado) {
+      document.getElementById('nomeId').value = idGerado;
+    })
+    .gerarIdUnico(); 
+}
+
+function gerarIdUnico() {
+  const data = new Date();
+  const timestamp = Utilities.formatDate(data, "GMT-3", "yyyyMMddHHmmss");
+  return "PRON-" + timestamp;
+}
+
+function selecionarEquipe(botao) {
+    // Desmarca todos
+    document.querySelectorAll('.equipe-btn').forEach(btn => {
+      btn.classList.remove('selecionado');
+      btn.previousElementSibling.checked = false;
+    });
+
+    // Marca o clicado
+    botao.classList.add('selecionado');
+    botao.previousElementSibling.checked = true;
+  }
+
+const classesPorDominio = { "1": ["Conscientização para a saúde", "Gestão da saúde"],
+	"2": ["Ingestão", "Digestão", "Absorção", "Metabolismo", "Hidratação"],
+	"3": ["Função Urinária", "Função Gastrointestinal", "Função Tegumentar", "Função Respiratória"],
+	"4": ["Sono/repouso", "Atividade", "Balança de energia", "Respostas cardiovasculares / pulmonares", "Autocuidado"],
+	"5": ["Atenção", "Aula de orientação", "Sensação/percepção", "Cognição", "Comunicação"],
+	"6": ["Autoconceito", "Aula de autoestima", "Imagem corporal"],
+	"7": ["Função de cuidado", "Relações familiares", "Desempenho da função"],
+	"8": ["Identidade sexual", "Função sexual", "Classe de reprodução"],
+	"9": ["Respostas pós-traumáticas", "Respostas de Enfrentamento", "Estresse neurocomportamental"],
+	"10": ["Valores", "Classe de crença", "Congruência de valor/crença/ação"],
+	"11": ["Infecção", "Lesão física", "Violência", "Riscos ambientais", "Processos defensivos", "Termoregulação"],
+	"12": ["Conforto físico", "Conforto ambiental", "Conforto social"],
+	"13": ["Classe de crescimento", "Classe de desenvolvimento"],
+ };
+const diagnosticosPorClasse = { "Conscientização para a saúde": ["Diminuição do envolvimento de atividades diversivas", "Prontidão para melhorar a alfabetização em saúde", "Estilo de vida sedentário"],
+  "Gestão da saúde": ["Risco de tentativa de fuga", "Síndrome do idoso frágil", "Risco para síndrome de idoso frágil", "Prontidão para engajamento de exercício aprimorado", "Saúde comunitária deficiente", "Comportamento de saúde sujeito a risco", "Comportamentos de manutenção eficaz da saúde", "Autogestão eficaz da saúde", "Prontidão para autogestão aprimorada da saúde", "Autogestão eficaz da saúde da família", "Comportamentos ineficazes de manutenção doméstica", "Risco de comportamentos ineficazes de manutenção doméstica", "Prontidão para manutenção doméstica aprimorada comportamentos", "Proteção ineficaz"],
+
+  "Ingestão": ["Nutrição desequilibrada: menos do que os requisitos corporais", "Prontidão para nutrição aprimorada", "Produção insuficiente de leite materno", "Amamentação ineficaz", "Amamentação interrompida", "Prontidão para amamentação aprimorada", "Dinâmica alimentar ineficaz de adolescentes", "Dinâmica alimentar infantil ineficaz", "Dinâmica de alimentação infantil ineficaz", "Obesidade", "Excesso de peso", "Risco de excesso de peso", "Resposta ineficaz de sucção e deglutição do bebê", "Deglutição prejudicada"],
+  "Digestão": ["A classe não possui diagnósticos"],
+  "Absorção": ["A classe não possui diagnósticos"],
+  "Metabolismo": ["Risco de nível de glicose no sangue instável", "Hiperbilirrubinemia neonatal", "Risco de hiperbilirrubinemia neonatal", "Risco de insuficiência hepática", "Risco para síndrome metabólica"],
+  "Hidratação": ["Risco de desequilíbrio eletrolítico", "Risco de volume de fluido desequilibrado", "Volume de fluido deficiente", "Risco de volume de fluido deficiente", "Excesso de volume de fluido"],
+
+  "Função Urinária": ["Incontinência urinária associada a deficiência", "Eliminação urinária prejudicada", "Incontinência urinária mista", "Incontinência urinária de esforço", "Incontinência urinária de urgência", "Risco de incontinência urinária de urgência", "Retenção urinária", "Risco de retenção urinária"],
+  "Função Gastrointestinal": ["Constipação", "Risco de constipação", "Constipação percebida", "Constipação funcional crônica", "Risco de constipação funcional crônica", "Continência intestinal prejudicada", "Diarreia", "Motilidade gastrointestinal disfuncional", "Risco de motilidade gastrointestinal disfuncional"],
+  "Função Tegumentar": ["A classe não possui diagnósticos"],
+  "Função Respiratória": ["Troca de gases prejudicada"],
+
+  "Sono/repouso": ["Insônia", "Privação de sono", "Prontidão para sono melhor", "Padrão de sono perturbado"],
+  "Atividade": ["Tolerância de atividade diminuída","Risco de diminuição da tolerância à atividade", "Risco de síndrome de desuso", "Mobilidade na cama prejudicada", "Mobilidade física prejudicada", "Mobilidade em cadeira de rodas prejudicada", "Sessão prejudicada", "Posição prejudicada", "Capacidade de transferência prejudicada", "Caminhada prejudicada"],
+  "Balança de energia":["Campo de energia desequilibrado", "Fadiga", "Errante"],
+  "Respostas cardiovasculares / pulmonares": ["Padrão de respiração ineficaz", "Diminuição do débito cardíaco", "Risco de diminuição do débito cardíaco", "Risco de função cardiovascular prejudicada", "Autogestão de linfedema ineficaz", "Risco de autogerenciamento de linfedema ineficaz", "Ventilação espontânea prejudicada", "Risco de pressão arterial instável", "Risco de trombose", "Risco de diminuição da perfusão do tecido cardíaco", "Risco de perfusão de tecido cerebral ineficaz", "Perfusão tecidual periférica ineficaz", "Risco de perfusão tecidual periférica ineficaz", "Resposta disfuncional ao desmame ventilatório", "Resposta disfuncional ao desmame ventilatório de adulto"],
+  "Autocuidado": ["Déficit de autocuidado no banho", "Déficit de autocuidado de vestir", "Déficit de autocuidado alimentar", "Déficit de autocuidado sanitário", "Prontidão para autocuidado aprimorado", "Abandono"],
+
+  "Atenção": ["Negligência unilateral"],
+  "Aula de orientação": ["A classe não possui diagnósticos"],
+  "Sensação/percepção": ["A classe não possui diagnósticos"],
+  "Cognição": ["Confusão aguda", "Risco de confusão aguda", "Confusão crônica", "Controle emocional instável", "Controle de impulso ineficaz", "Conhecimento deficiente", "Prontidão para conhecimento aprimorado", "Memória prejudicada", "Processo de pensamento perturbado"],
+  "Comunicação": ["Prontidão para comunicação aprimorada", "Comunicação verbal prejudicada"],
+
+  "Autoconceito": ["Desesperança", "Prontidão para esperança aumentada", "Risco de comprometimento da dignidade humana", "Identidade pessoal perturbada", "Risco de identidade pessoal perturbada", "Prontidão para autoconceito aprimorado "],
+  "Aula de autoestima": ["Baixa autoestima crônica", "Risco de baixa autoestima crônica", "Baixa autoestima situacional", "Risco de baixa autoestima situacional"],
+  "Imagem corporal": ["Imagem corporal perturbada"],
+
+  "Função de cuidado": ["Paternidade prejudicada", "Risco para paternidade prejudicada", "Prontidão para paternidade aprimorada", "Cepa de função de cuidador", "Risco para tensão de função de cuidador"],
+  "Relações familiares": ["Risco para anexo prejudicado", "Síndrome de identidade familiar perturbada", "Risco para síndrome de identidade familiar perturbada", "Processos familiares disfuncionais", "Processos familiares interrompidos", "Prontidão para processos familiares aprimorados"],
+  "Desempenho da função": ["Relacionamento ineficaz", "Risco de relacionamento ineficaz", "Prontidão para relacionamento aprimorado", "Conflito de papel parental", "Desempenho de função ineficaz", "Interação social prejudicada"],
+
+  "Identidade sexual": ["A classe não possui diagnósticos"],
+  "Função sexual": ["Disfunção sexual", "Padrão de sexualidade ineficaz"],
+  "Classe de reprodução": ["Processo de procriação ineficaz", "Risco de processo de procriação ineficaz", "Prontidão para um processo reprodutivo aprimorado", "Risco de díade materno-fetal perturbada"],
+
+  "Respostas pós-traumáticas": ["Risco de transição de imigração complicada", "Síndrome pós-trauma", "Risco para síndrome pós-trauma", "Síndrome de estupro-trauma", "Síndrome de estresse de realocação", "Risco para síndrome de estresse de realocação"],
+  "Respostas de Enfrentamento": ["Planejamento de atividades ineficazes", "Risco de planejamento ineficaz de atividades", "Ansiedade", "Coping defensivo", "Enfrentamento ineficaz", "Prontidão para enfrentamento aprimorado", "Enfrentamento ineficaz da comunidade", "Prontidão para lidar melhor com a comunidade", "Enfrentamento familiar comprometido", "Enfrentamento familiar com deficiência", "Prontidão para enfrentamento familiar aprimorado", "Ansiedade da morte", "Negação ineficaz", "Temer", "Luto desadaptativo", "Risco de luto não adaptativo", "Prontidão para luto intensificado", "Regulação do humor prejudicada", "Impotência", "Risco de impotência", "Prontidão para maior potência", "Resiliência prejudicada", "Risco de resiliência prejudicada", "Prontidão para maior resiliência", "Tristeza crônica", "Sobrecarga de estresse"],
+  "Estresse neurocomportamental": ["Síndrome de abstinência aguda de substância", "Risco de síndrome de abstinência aguda de substância", "Disreflexia autonômica", "Risco de disreflexia autonômica", "Síndrome de abstinência neonatal", "Comportamento infantil desorganizado", "Risco de comportamento infantil desorganizado", "Prontidão para um comportamento infantil organizado aprimorado"],
+
+  "Valores": ["A classe não possui diagnósticos"],
+  "Classe de crença": ["Prontidão para um bem-estar espiritual aprimorado"],
+  "Congruência de valor/crença/ação": ["Prontidão para tomada de decisão aprimorada", "Conflito de decisão", "Tomada de decisão emancipada prejudicada", "Risco para tomada de decisão emancipada prejudicada", "Prontidão para tomada de decisão emancipada aprimorada", "Angústia moral", "Religiosidade prejudicada", "Risco de religiosidade prejudicada", "Prontidão para religiosidade aprimorada", "Angústia espiritual", "Risco de angústia espiritual"],
+
+  "Infecção": ["Risco de infecção", "Risco de infecção de sítio cirúrgico"],
+  "Lesão física": ["Desobstrução ineficaz das vias aéreas", "Risco de aspiração", "Risco de sangramento", "Dentição prejudicada", "Risco de olho seco", "Autogestão ineficaz de olho seco", "Risco de boca seca", "Risco de quedas em adultos", "Risco de queda de criança", "Risco de lesão", "Risco de lesão da córnea", "Lesão do complexo areolopapilar", "Risco de lesão do complexo areolopapilar", "Risco de lesão do trato urinário", "Risco de lesão de posicionamento perioperatória", "Risco de lesão térmica", "Integridade da membrana mucosa oral prejudicada", "Risco de integridade da membrana mucosa oral prejudicada", "Risco de disfunção neurovascular periférica", "Risco de trauma físico", "Risco de trauma vascular", "Lesão de pressão em adulto", "Risco de lesão por pressão em adulto", "Lesão infantil por pressão", "Risco de lesão por pressão infantil", "Lesão por pressão neonatal", "Risco de lesão por pressão neonatal", "Risco de choque", "Integridade da pele prejudicada", "Risco de integridade da pele prejudicada", "Risco de morte súbita infantil", "Risco de sufocação", "Recuperação cirúrgica retardada", "Risco de recuperação cirúrgica retardada", "Integridade do tecido prejudicada", "Risco de integridade do tecido prejudicada"],
+  "Violência": ["Risco de mutilação genital feminina", "Risco de violência dirigida por outros", "Risco de violência autodirigida", "Auto-mutilação", "Risco de automutilação", "Risco de comportamento suicida"],
+  "Riscos ambientais": ["Contaminação", "Risco de contaminação", "Risco de lesão ocupacional", "Risco de envenenamento"],
+  "Processos defensivos": ["Risco de reação adversa ao meio de contraste iodado", "Risco de reação alérgica", "Risco de reação alérgica ao látex"],
+  "Termoregulação": ["Hipertermia", "Hipotermia", "Risco de hipotermia", "Hipotermia neonatal", "Risco de hipotermia neonatal", "Risco de hipotermia perioperatória", "Termorregulação ineficaz", "Risco de termorregulação ineficaz"],
+
+  "Conforto físico": ["Conforto prejudicado", "Prontidão para maior conforto", "Náusea", "Dor aguda", "Dor crônica", "Síndrome de dor crônica", "Dor de parto"],
+  "Conforto ambiental": ["Conforto prejudicado", "Prontidão para maior conforto"],
+  "Conforto social": ["Conforto prejudicado", "Prontidão para maior conforto", "Risco de solidão", "Isolamento social"],
+
+  "Classe de crescimento": ["A classe não possui diagnósticos"],
+  "Classe de desenvolvimento": ["Desenvolvimento infantil retardado", "Risco de atraso no desenvolvimento infantil", "Atraso no desenvolvimento motor infantil", "Risco de atraso no desenvolvimento motor infantil"],
+ };
+
+function atualizarClasses() {
+  const dominio = document.getElementById("dominioSelect").value;
+  const classeSelect = document.getElementById("classeSelect");
+  classeSelect.innerHTML = '<option value="" disabled selected>Selecione...</option>';
+
+  if (classesPorDominio[dominio]) {
+    classesPorDominio[dominio].forEach(classe => {
+      const opt = document.createElement("option");
+      opt.value = classe;
+      opt.textContent = classe;
+      classeSelect.appendChild(opt);
+    });
+    document.getElementById("classeBox").style.display = "block";
+  }
+}
+
+const listaDiagnosticos = [];
+
+function adicionarDiagnostico() {
+  const diagnostico = document.getElementById("diagnosticoSelect").value;
+  if (!diagnostico) return alert("Selecione um diagnóstico.");
+
+  // Verifica se já foi adicionado
+  const jaExiste = listaDiagnosticos.find(item => item.diagnostico === diagnostico);
+  if (jaExiste) return alert("Este diagnóstico já foi adicionado.");
+
+  const index = listaDiagnosticos.length;
+  const idUnico = `diag-${Date.now()}-${index}`; // id único por segurança
+
+  listaDiagnosticos.push({
+    id: idUnico,
+    diagnostico,
+    prescricao: "",
+    intervencao: ""
+  });
+
+  const container = document.getElementById("listaDiagnosticos");
+  const box = document.createElement("div");
+  box.className = "diagnostico-item";
+  box.id = idUnico;
+  box.innerHTML = `
+    <p><strong>🩺 Diagnóstico:</strong> ${diagnostico}</p>
+    <label>📋 Prescrição de Enfermagem:</label>
+    <textarea rows="2" placeholder="Ex: Realizar curativo..." onchange="atualizarPrescricao('${idUnico}', this.value)"></textarea>
+    <label>🛠️ Intervenções de Enfermagem:</label>
+    <textarea rows="2" placeholder="Ex: Avaliar ferida diariamente..." onchange="atualizarIntervencao('${idUnico}', this.value)"></textarea>
+    <button type="button" onclick="removerDiagnostico('${idUnico}')">❌ Remover</button>
+    <hr>
+  `;
+  container.appendChild(box);
+  document.getElementById("diagnosticosSalvosBox").style.display = "block";
+}
+
+function atualizarPrescricao(id, valor) {
+  const item = listaDiagnosticos.find(el => el.id === id);
+  if (item) item.prescricao = valor;
+}
+
+function atualizarIntervencao(id, valor) {
+  const item = listaDiagnosticos.find(el => el.id === id);
+  if (item) item.intervencao = valor;
+}
+
+function removerDiagnostico(id) {
+  // Remove da lista
+  const index = listaDiagnosticos.findIndex(el => el.id === id);
+  if (index !== -1) listaDiagnosticos.splice(index, 1);
+
+  // Remove do DOM
+  const elemento = document.getElementById(id);
+  if (elemento) elemento.remove();
+
+  // Esconde o quadro se não houver mais nada
+  if (listaDiagnosticos.length === 0) {
+    document.getElementById("diagnosticosSalvosBox").style.display = "none";
+  }
+}
+
+function enviarDiagnosticos() {
+  const form = document.getElementById("formDiagnostico");
+  const dadosForm = new FormData(form);
+
+  const data = dadosForm.get("data");
+  const nomePaciente = dadosForm.get("nomePaciente");
+  const nomeId = dadosForm.get("nomeId");
+  const responsavel = document.getElementById("responsavelDiagnostico").value;
+
+  if (!responsavel) return alert("Informe o nome do responsável.");
+  if (listaDiagnosticos.length === 0) return alert("Adicione ao menos um diagnóstico.");
+
+  const dados = {
+    data,
+    nomePaciente,
+    nomeId,
+    responsavel,
+    diagnosticos: listaDiagnosticos
+  };
+
+  google.script.run
+    .withSuccessHandler(() => {
+      document.getElementById("msgDiagnostico").textContent = "Diagnósticos enviados com sucesso!";
+      document.getElementById("msgDiagnostico").className = "success";
+      form.reset();
+      listaDiagnosticos.length = 0;
+      document.getElementById("listaDiagnosticos").innerHTML = "";
+      document.getElementById("diagnosticosSalvosBox").style.display = "none";
+    })
+    .withFailureHandler(() => {
+      document.getElementById("msgDiagnostico").textContent = "Erro ao enviar.";
+      document.getElementById("msgDiagnostico").className = "error";
+    })
+    .salvarDadosDiagnosticos(dados);
+}
+
+function atualizarTitulos() {
+  const classe = document.getElementById("classeSelect").value;
+  console.log("Classe selecionada:", classe); // ← VERIFICAÇÃO
+
+  const diagnosticoSelect = document.getElementById("diagnosticoSelect");
+  diagnosticoSelect.innerHTML = '<option value="" disabled selected>Selecione...</option>';
+
+  if (diagnosticosPorClasse[classe]) {
+    diagnosticosPorClasse[classe].forEach(diagnostico => {
+      const opt = document.createElement("option");
+      opt.value = diagnostico;
+      opt.textContent = diagnostico;
+      diagnosticoSelect.appendChild(opt);
+    });
+    document.getElementById("diagnosticoBox").style.display = "block";
+  } else {
+    console.log("❌ Classe não encontrada no objeto diagnosticosPorClasse");
+  }
+}
+
+// Carregar Domínios ao iniciar a página
+function carregarDominios() {
+  const dominioSelect = document.getElementById("dominioSelect");
+  dominioSelect.innerHTML = '<option value="" disabled selected>Selecione...</option>';
+  
+  for (let id in classesPorDominio) {
+    const opt = document.createElement("option");
+    opt.value = id;
+    opt.textContent = getNomeDominioPorId(id);
+    dominioSelect.appendChild(opt);
+  }
+}
+
+// Mapeia os nomes dos Domínios conforme os valores usados no select original
+function getNomeDominioPorId(id) {
+  const nomes = {
+    "1": "Promoção da Saúde",
+    "2": "Nutrição",
+    "3": "Eliminação e Troca",
+    "4": "Atividade/Repouso",
+    "5": "Percepção/Cognição",
+    "6": "Autopercepção",
+    "7": "Relação de função",
+    "8": "Sexualidade",
+    "9": "Enfrentamento/Tolerância ao estresse",
+    "10": "Princípios de vida",
+    "11": "Segurança/proteção",
+    "12": "Conforto",
+    "13": "Crescimento/desenvolvimento"
+  };
+  return nomes[id] || `Domínio ${id}`;
+}
+
+// Chamada no carregamento da página
+window.onload = carregarDominios;
+
+
+ //Preenche a lista suspensa ao abrir o card
+ function carregarPacientesAdmissao() {
+  const select = document.getElementById("listaPacientes");
+ select.innerHTML = '<option value="">Selecione...</option>';
+
+ pacientes.forEach(p => {
+   const option = document.createElement("option");
+    option.value = p.nomeId;
+   option.textContent = p.nomePaciente;
+   select.appendChild(option);
+  });
+ }
+
+let pacientes = [
+  { nomePaciente: "Benedita Souza Pereira", nomeId: "75514", dataNascimento: "1942-03-12", sexo: "Feminino", equipe: "Equipe Florence", status: "Ativo" },
+  { nomePaciente: "Carlos Henrique Lima", nomeId: "82059", dataNascimento: "1987-06-25", sexo: "Masculino", equipe: "Equipe Horta", status: "Ativo" },
+  { nomePaciente: "Ana Luísa Fernandes Batista", nomeId: "82553", dataNascimento: "2018-11-14", sexo: "Feminino", equipe: "Equipe Peplau", status: "Ativo" },
+  { nomePaciente: "João Batista de Moura", nomeId: "82816", dataNascimento: "1958-01-07", sexo: "Masculino", equipe: "Equpe Nery", status: "Ativo" },
+  { nomePaciente: "Hélio César Miranda Lopes", nomeId: "55317", dataNascimento: "1965-09-28", sexo: "Masculino", equipe: "Equipe Florence", status: "Ativo" },
+  { nomePaciente: "Lourdes Ferreira da Costa", nomeId: "97091", dataNascimento: "1936-04-03", sexo: "Feminino", equipe: "Equipe Horta", status: "Ativo" },
+  { nomePaciente: "Rafael Teixeira Gomes", nomeId: "48569", dataNascimento: "2008-05-18", sexo: "Masculino", equipe: "Equipe Peplau", status: "Ativo" },
+  { nomePaciente: "Sebastião Alves de Andrade", nomeId: "12213", dataNascimento: "1947-02-01", sexo: "Masculino", equipe: "Equpe Nery", status: "Ativo" },
+  { nomePaciente: "Antônio Carlos Vieira Lopes", nomeId: "53430", dataNascimento: "1955-12-19", sexo: "Masculino", equipe: "Equipe Florence", status: "Ativo" },
+  { nomePaciente: "Maria José da Conceição", nomeId: "23148", dataNascimento: "1949-10-22", sexo: "Feminino", equipe: "Equipe Horta", status: "Ativo" },
+  { nomePaciente: "Geraldo José Pacheco", nomeId: "23149", dataNascimento: "1943-03-15", sexo: "Masculino", equipe: "Equipe Peplau", status: "Ativo" },
+  { nomePaciente: "Neusa Almeida Figueiredo", nomeId: "20024", dataNascimento: "1940-07-10", sexo: "Feminino", equipe: "Equpe Nery", status: "Ativo" },
+  { nomePaciente: "Bruno César Fernandes", nomeId: "39970", dataNascimento: "1994-09-23", sexo: "Masculino", equipe: "Equipe Florence", status: "Ativo" },
+  { nomePaciente: "Sebastiana Nogueira Ramos", nomeId: "39920", dataNascimento: "1933-01-29", sexo: "Feminino", equipe: "Equipe Horta", status: "Ativo" },
+  { nomePaciente: "Isadora Lima de Assis", nomeId: "45688", dataNascimento: "2015-10-30", sexo: "Feminino", equipe: "Equipe Peplau", status: "Ativo" },
+  { nomePaciente: "Adriana Pereira dos Santos", nomeId: "73157", dataNascimento: "1973-11-05", sexo: "Feminino", equipe: "Equpe Nery", status: "Ativo" },
+  { nomePaciente: "Domingos Ribeiro de Souza", nomeId: "54665", dataNascimento: "1950-08-17", sexo: "Masculino", equipe: "Equipe Florence", status: "Ativo" },
+  { nomePaciente: "Carolina Nunes Ferreira", nomeId: "81038", dataNascimento: "1989-04-09", sexo: "Feminino", equipe: "Equipe Horta", status: "Ativo" },
+  { nomePaciente: "Alcides Oliveira Ramos", nomeId: "92105", dataNascimento: "1945-02-02", sexo: "Masculino", equipe: "Equipe Peplau", status: "Ativo" },
+  { nomePaciente: "Rosa Maria Tavares Lima", nomeId: "71150", dataNascimento: "1956-05-12", sexo: "Feminino", equipe: "Equpe Nery", status: "Ativo" },
+  { nomePaciente: "Rosa Maria Tavares Lima", nomeId: "71150", dataNascimento: "1956-05-12", sexo: "Feminino", equipe: "Equpe Nery" },
+{ nomePaciente: "José Alberto de Lima", nomeId: "10457", dataNascimento: "1994-01-10", sexo: "Feminino", equipe: "Equipe Nery" },
+{ nomePaciente: "Maria Clara Sanches", nomeId: "23984", dataNascimento: "2005-11-02", sexo: "Feminino", equipe: "Equipe Horta" },
+{ nomePaciente: "Luana Beatriz Rocha", nomeId: "34712", dataNascimento: "1986-01-23", sexo: "Masculino", equipe: "Equipe Horta" },
+{ nomePaciente: "Pedro Henrique Soares", nomeId: "45896", dataNascimento: "1950-03-24", sexo: "Masculino", equipe: "Equipe Florence" },
+{ nomePaciente: "Joana Ribeiro da Costa", nomeId: "56231", dataNascimento: "2011-03-09", sexo: "Feminino", equipe: "Equipe Florence" },
+{ nomePaciente: "Carlos Eduardo Neves", nomeId: "67320", dataNascimento: "2017-01-24", sexo: "Feminino", equipe: "Equipe Horta" },
+{ nomePaciente: "Aline Ferreira Dutra", nomeId: "78154", dataNascimento: "1956-07-22", sexo: "Masculino", equipe: "Equipe Peplau" },
+{ nomePaciente: "Mateus Oliveira Silva", nomeId: "89631", dataNascimento: "1959-12-19", sexo: "Masculino", equipe: "Equipe Florence" },
+{ nomePaciente: "Sônia Maria Fernandes", nomeId: "90528", dataNascimento: "2014-06-13", sexo: "Masculino", equipe: "Equipe Florence" },
+{ nomePaciente: "Gustavo Lima Bastos", nomeId: "31467", dataNascimento: "1978-05-19", sexo: "Feminino", equipe: "Equipe Horta" },
+{ nomePaciente: "Antônio José de Almeida", nomeId: "42689", dataNascimento: "1977-11-14", sexo: "Masculino", equipe: "Equipe Nery" },
+{ nomePaciente: "Rosângela Maria da Luz", nomeId: "53701", dataNascimento: "1958-05-23", sexo: "Masculino", equipe: "Equipe Florence" },
+{ nomePaciente: "João Pedro Lima Marques", nomeId: "64938", dataNascimento: "1958-12-05", sexo: "Feminino", equipe: "Equipe Peplau" },
+{ nomePaciente: "Ana Beatriz Ferreira", nomeId: "75210", dataNascimento: "1981-04-03", sexo: "Feminino", equipe: "Equipe Nery" },
+{ nomePaciente: "Carlos Henrique Faria", nomeId: "84329", dataNascimento: "1992-12-07", sexo: "Masculino", equipe: "Equipe Peplau" },
+{ nomePaciente: "Gabriela Duarte dos Santos", nomeId: "91672", dataNascimento: "1959-10-26", sexo: "Masculino", equipe: "Equipe Nery" },
+{ nomePaciente: "Valdir Aparecido Silva", nomeId: "28790", dataNascimento: "2006-01-19", sexo: "Masculino", equipe: "Equipe Nery" },
+{ nomePaciente: "Marta Helena Cunha", nomeId: "36142", dataNascimento: "1944-07-30", sexo: "Feminino", equipe: "Equipe Florence" },
+{ nomePaciente: "Fábio Leandro Rocha", nomeId: "47850", dataNascimento: "2004-12-08", sexo: "Masculino", equipe: "Equipe Nery" },
+{ nomePaciente: "Camila Torres de Melo", nomeId: "58921", dataNascimento: "1984-08-20", sexo: "Feminino", equipe: "Equipe Nery" },
+{ nomePaciente: "Rafael Augusto Paiva", nomeId: "69347", dataNascimento: "1944-04-12", sexo: "Masculino", equipe: "Equipe Horta" },
+{ nomePaciente: "Helena Cristina Braga", nomeId: "70415", dataNascimento: "1972-02-22", sexo: "Masculino", equipe: "Equipe Peplau" },
+{ nomePaciente: "Luiz Fernando Camargo", nomeId: "81596", dataNascimento: "1957-08-16", sexo: "Masculino", equipe: "Equipe Horta" },
+{ nomePaciente: "Sílvia Regina Pires", nomeId: "92180", dataNascimento: "1944-08-08", sexo: "Feminino", equipe: "Equipe Horta" },
+{ nomePaciente: "Eduardo Tavares Filho", nomeId: "63841", dataNascimento: "1952-09-10", sexo: "Feminino", equipe: "Equipe Florence" },
+{ nomePaciente: "Lívia Moura Batista", nomeId: "50783", dataNascimento: "1968-11-11", sexo: "Feminino", equipe: "Equipe Florence" },
+{ nomePaciente: "Ricardo Lima da Rocha", nomeId: "43892", dataNascimento: "2006-11-06", sexo: "Masculino", equipe: "Equipe Peplau" },
+{ nomePaciente: "Tatiane Ribeiro Lopes", nomeId: "39486", dataNascimento: "1969-10-13", sexo: "Feminino", equipe: "Equipe Peplau" },
+{ nomePaciente: "Bruno César Andrade", nomeId: "14237", dataNascimento: "1983-10-13", sexo: "Masculino", equipe: "Equipe Horta" },
+{ nomePaciente: "Débora Nunes Ferreira", nomeId: "26830", dataNascimento: "1952-11-07", sexo: "Feminino", equipe: "Equipe Peplau" }
+];
+
+  // Preenche os campos ao selecionar um paciente
+  function preencherCamposAdmissao() {
+    const select = document.getElementById("listaPacientes");
+    const valorSelecionado = select.value;
+    const pacienteSelecionado = pacientes.find(p => p.nomeId === valorSelecionado);
+
+    if (pacienteSelecionado) {
+     // Exibição
+document.getElementById("exibeNomeId").value = pacienteSelecionado.nomeId;
+document.getElementById("exibeDataNascimento").value = pacienteSelecionado.dataNascimento;
+document.getElementById("exibeSexo").value = pacienteSelecionado.sexo;
+document.getElementById("exibeEquipe").value = pacienteSelecionado.equipe;
+
+// Envio
+document.getElementById("campoNomeIdAdmissao").value = pacienteSelecionado.nomeId;
+document.getElementById("campoNomePaciente").value = pacienteSelecionado.nomePaciente;
+document.getElementById("campoNascimento").value = pacienteSelecionado.dataNascimento;
+document.getElementById("campoSexo").value = pacienteSelecionado.sexo;
+document.getElementById("campoEquipe").value = pacienteSelecionado.equipe;
+
+
+      document.getElementById("dadosPacienteAdmissao").style.display = "block";
+    } else {
+      document.getElementById("dadosPacienteAdmissao").style.display = "none";
+    }
+  }
+
+// Chamada ao abrir um card específico
+function abrirCard(idCard) {
+  // Oculta todos os cards
+  document.querySelectorAll('.card').forEach(card => card.style.display = 'none');
+
+  // Exibe o card selecionado
+  const cardSelecionado = document.getElementById(idCard);
+  if (cardSelecionado) {
+    cardSelecionado.style.display = 'block';
+
+    // Se for o card de Admissão, carrega a lista de pacientes
+    if (idCard === 'admissaoCard') {
+      carregarPacientesAdmissao();
+    }
+  }
+}
+
+function preencherCamposPaciente(selectElement) {
+  const nomeIdSelecionado = selectElement.value;
+  const paciente = pacientes.find(p => p.nomeId === nomeIdSelecionado);
+  const form = selectElement.closest("form");
+
+  if (paciente) {
+    form.querySelector(".campoNomeId").value = paciente.nomeId;
+    form.querySelector(".campoNomePaciente").value = paciente.nomePaciente;
+    form.querySelector(".campoNascimento").value = paciente.dataNascimento;
+    form.querySelector(".campoSexo").value = paciente.sexo;
+    form.querySelector(".campoEquipe").value = paciente.equipe;
+
+    form.querySelector(".exibeNomeId").value = paciente.nomeId;
+    form.querySelector(".exibeDataNascimento").value = paciente.dataNascimento;
+    form.querySelector(".exibeSexo").value = paciente.sexo;
+    form.querySelector(".exibeEquipe").value = paciente.equipe;
+
+    form.querySelector(".dadosPaciente").style.display = "block";
+  } else {
+    form.querySelector(".dadosPaciente").style.display = "none";
+  }
+}
+
+function formatarData(data) {
+  const d = new Date(data);
+  if (isNaN(d)) return data;
+  return d.toLocaleDateString('pt-BR');
+}
+
+function carregarBotoesPacientes() {
+  const container = document.getElementById("botoesPacientes");
+  container.innerHTML = '';
+
+  const equipes = {};
+  pacientes.forEach(p => {
+    if (!equipes[p.equipe]) equipes[p.equipe] = [];
+    equipes[p.equipe].push(p);
+  });
+
+  for (const equipe in equipes) {
+    const titulo = document.createElement("h3");
+    titulo.textContent = equipe;
+    container.appendChild(titulo);
+
+    const grupo = document.createElement("div");
+    grupo.className = "grupo-botoes";
+
+    equipes[equipe].forEach(p => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.textContent = p.nomePaciente;
+      btn.onclick = () => selecionarPaciente(p);
+      grupo.appendChild(btn);
+    });
+
+    container.appendChild(grupo);
+  }
+}
+
+function formatarDataExcelParaISO(serialExcel) {
+  // Convertendo número serial do Excel para data no formato YYYY-MM-DD
+  const baseDate = new Date(1899, 11, 30); // base para o Excel
+  baseDate.setDate(baseDate.getDate() + parseInt(serialExcel));
+  return baseDate.toISOString().split('T')[0]; // Retorna "YYYY-MM-DD"
+}
+
+function carregarPacientesNoSelect(selectId, campos) {
+  const select = document.getElementById(selectId);
+  select.innerHTML = `<option value="">-- Selecione um paciente --</option>`; // Garante que não repete opções
+
+  pacientes.forEach((paciente, index) => {
+    const option = document.createElement("option");
+    option.value = index;
+    option.textContent = `${paciente.nomePaciente} - ${paciente.nomeId} - ${paciente.equipe}`;
+    select.appendChild(option);
+  });
+
+  select.addEventListener("change", () => {
+    const selectedIndex = select.value;
+    if (selectedIndex !== "") {
+      const paciente = pacientes[selectedIndex];
+      const nascimentoFormatado = formatarDataExcelParaISO(paciente.dataNascimento);
+
+      // Preenche os campos definidos no objeto "campos"
+      document.getElementById(campos.nomeId).value = paciente.nomeId;
+      document.getElementById(campos.nome).value = paciente.nomePaciente;
+      document.getElementById(campos.nascimento).value = nascimentoFormatado;
+
+      // Se houver campos visíveis
+      if (campos.exibeNome) document.getElementById(campos.exibeNome).value = paciente.nomePaciente;
+      if (campos.exibeId) document.getElementById(campos.exibeId).value = paciente.nomeId;
+      if (campos.exibeNascimento) document.getElementById(campos.exibeNascimento).value = nascimentoFormatado;
+
+      document.getElementById(campos.divConfirmacao).style.display = "block";
+    } else {
+      document.getElementById(campos.divConfirmacao).style.display = "none";
+    }
+  });
+}
+
+carregarPacientesNoSelect("selectPaciente", {
+  nomeId: "campoNomeIdAnotacao",
+  nome: "campoNomePaciente",
+  nascimento: "campoNascimento",
+  exibeNome: "exibeNomePaciente",
+  exibeId: "exibeNomeId",
+  exibeNascimento: "exibeDataNascimento",
+  divConfirmacao: "dadosPacienteAnotacao"
+});
+
+carregarPacientesNoSelect("selectPacienteConsulta", {
+  nomeId: "campoNomeIdConsulta",
+  nome: "campoNomePacienteConsulta",
+  nascimento: "campoNascimentoConsulta",
+  exibeNome: "exibeNomePacienteConsulta",
+  exibeId: "exibeNomeIdConsulta",
+  exibeNascimento: "exibeDataNascimentoConsulta",
+  divConfirmacao: "dadosPacienteConsulta"
+});
+
+carregarPacientesNoSelect("selectPacienteDiagnostico", {
+  nomeId: "campoNomeIdDiagnostico",
+  nome: "campoNomePacienteDiagnostico",
+  nascimento: "campoNascimentoDiagnostico",
+  exibeNome: "exibeNomePacienteDiagnostico",
+  exibeId: "exibeNomeIdDiagnostico", // você pode exibir mais se quiser
+  exibeNascimento: "exibeDataNascimentoDiagnostico",
+  divConfirmacao: "dadosPacienteDiagnostico"
+});
+
+carregarPacientesNoSelect("selectPacienteAlta", {
+  nomeId: "campoNomeIdAlta",
+  nome: "campoNomePacienteAlta",
+  nascimento: "campoNascimentoAlta",
+  exibeNome: "exibeNomePacienteAlta",
+  exibeId: "exibeNomeIdAlta", //
+  exibeNascimento: "exibeDataNascimentoAlta",
+  divConfirmacao: "dadosPacienteAlta"
+});
+
+carregarPacientesNoSelect("selectPacienteIntercorrencia", {
+  nomeId: "campoNomeIdIntercorrencia",
+  nome: "campoNomePacienteIntercorrencia",
+  nascimento: "campoNascimentoIntercorrencia",
+  exibeNome: "exibeNomePacienteIntercorrencia",
+  exibeId: "exibeNomeIdIntercorrencia", //
+  exibeNascimento: "exibeDataNascimentoIntercorrencia",
+  divConfirmacao: "dadosPacienteIntercorrencia"
+});
+
+</script>
+
+<!-- Blocos adicionados para compatibilidade com script.js -->
+<div id="selectEquipe" style="display: none;">
+  <p>Conteúdo para selectEquipe em construção...</p>
+</div>
+<div id="cardDiagnostico" style="display: none;">
+  <p>Conteúdo para cardDiagnostico em construção...</p>
+</div>
+<div id="cardAlta" style="display: none;">
+  <p>Conteúdo para cardAlta em construção...</p>
+</div>
+<div id="cardConsulta" style="display: none;">
+  <p>Conteúdo para cardConsulta em construção...</p>
+</div>
+<div id="cardAnotacao" style="display: none;">
+  <p>Conteúdo para cardAnotacao em construção...</p>
+</div>
+<div id="cardIntercorrencia" style="display: none;">
+  <p>Conteúdo para cardIntercorrencia em construção...</p>
+</div>
+<div id="cardLeitura" style="display: none;">
+  <p>Conteúdo para cardLeitura em construção...</p>
+</div>
+<div id="cardCadastro" style="display: none;">
+  <p>Conteúdo para cardCadastro em construção...</p>
+</div>
+<div id="cardAdmissao" style="display: none;">
+  <p>Conteúdo para cardAdmissao em construção...</p>
+</div>
+
 </body>
 </html>
+
+
 

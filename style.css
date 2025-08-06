@@ -1,8 +1,8 @@
 body {
-  background-color: #e0f7fa;
-  font-family: Arial, sans-serif;
-  text-align: center;
-  padding: 50px;
-  color: #00695c;
+  margin: 0;
+  font-family: 'Poppins', 'Arial', sans-serif; /* Fonte mais moderna */
+  background: linear-gradient(135deg, #c0e0e7, #ffffff); /* Gradiente mais "diagonal" */
+  min-height: 100vh;
+  display: flex;
+  overflow-x: hidden;
 }
-
