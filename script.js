@@ -947,3 +947,56 @@ carregarPacientesNoSelect("selectPacienteIntercorrencia", {
   exibeNascimento: "exibeDataNascimentoIntercorrencia",
   divConfirmacao: "dadosPacienteIntercorrencia"
 });
+
+const scriptURL = "https://script.google.com/macros/s/AKfycbxXJqNgb9sa00i4uAZpBwGW0kGoOqZlE8Ej6nw0oiEDzXQoaX3xPNNE7H5nm0ROiwT4yA/exec";
+
+// Função genérica de envio
+function handleFormSubmit(formId, aba) {
+  const form = document.getElementById(formId);
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+    formData.append("aba", aba); // nome da aba como parâmetro extra
+
+    fetch(scriptURL, {
+      method: "POST",
+      body: formData
+    })
+      .then(response => {
+        if (response.ok) {
+          showMessage("Dados enviados com sucesso!", "success");
+          form.reset();
+        } else {
+          throw new Error("Erro na resposta do servidor");
+        }
+      })
+      .catch(error => {
+        console.error("Erro:", error);
+        showMessage("Erro ao enviar os dados. Tente novamente.", "error");
+      });
+  });
+}
+
+// Função para mostrar mensagem visual
+function showMessage(text, type) {
+  const message = document.createElement("div");
+  message.textContent = text;
+  message.className = `alert ${type}`;
+  document.body.appendChild(message);
+  setTimeout(() => {
+    message.remove();
+  }, 4000);
+}
+
+// Aplica a função a todos os formulários
+document.addEventListener("DOMContentLoaded", function () {
+  handleFormSubmit("formCadastro", "CADASTRO");
+  handleFormSubmit("formAdmissao", "ADMISSAO");
+  handleFormSubmit("formAnotacao", "ANOTACAO");
+  handleFormSubmit("formConsulta", "CONSULTA");
+  handleFormSubmit("formDiagnostico", "DIAGNOSTICO");
+  handleFormSubmit("formIntercorrencia", "INTERCORRENCIA");
+  handleFormSubmit("formAlta", "ALTA");
+});
+
